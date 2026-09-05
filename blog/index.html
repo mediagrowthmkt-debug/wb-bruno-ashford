@@ -115,8 +115,10 @@
     <h2 id="sub-h">Get the growth playbook in your inbox</h2>
     <p>One sharp idea each week on sales, AI, and paid traffic. Written for founders and executives who want compounding growth, not noise.</p>
   </div>
-  <!-- TODO: wire to GoHighLevel (subaccount to be created). No real submit yet. -->
-  <form class="subscribe-form" data-integration="ghl-pending" novalidate>
+  <!-- Live: posts to the secure server-side proxy (GHL CRM). Token stays server-side. -->
+  <form class="subscribe-form" data-integration="ghl-live" novalidate>
+    <input type="hidden" name="source" value="Newsletter: The Ashford Brief">
+    <input type="text" class="hp-field" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
     <div class="field">
       <label for="sub-name">First name</label>
       <input type="text" id="sub-name" name="name" autocomplete="given-name" placeholder="Jordan">

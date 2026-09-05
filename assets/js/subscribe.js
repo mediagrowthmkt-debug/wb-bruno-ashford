@@ -1,15 +1,19 @@
-/* Newsletter opt-in — front-end only for now.
-   The submit does NOT hit any backend yet: the endpoint is stubbed until the
-   GoHighLevel subaccount exists. See data-integration="ghl-pending".
-   TODO: replace the fake success with a real POST to the GHL form/webhook. */
+/* Newsletter / lead opt-in — posts to the secure server-side proxy.
+   The GoHighLevel token lives ONLY on the backend (bruno-leads-api on
+   Hostinger). This script sends { name, email, source } to that proxy, which
+   validates, rate-limits, checks the honeypot and upserts the contact in the
+   GHL CRM. The site never sees the token. See data-integration="ghl-live". */
 (function () {
   "use strict";
 
+  var ENDPOINT = "https://mediagrowth.com.br/bruno-leads-api/api.php";
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
   function init(form) {
     var note = form.querySelector(".form-note");
     var email = form.querySelector('input[type="email"]');
+    var nameEl = form.querySelector('input[name="name"]');
+    var sourceEl = form.querySelector('input[name="source"]');
 
     function setNote(msg, kind) {
       if (!note) return;
@@ -36,25 +40,43 @@
         return;
       }
 
-      // --- STUB: no real integration yet -------------------------------------
-      // When the GoHighLevel subaccount is ready, POST { name, email } to the
-      // GHL form endpoint / webhook here and gate the success state on its
-      // response. For now we simulate a successful opt-in in the UI only.
       var btn = form.querySelector('button[type="submit"]');
+      var btnLabel = btn ? btn.textContent : "";
       if (btn) {
         btn.disabled = true;
-        btn.textContent = "Subscribing...";
+        btn.textContent = "Sending...";
       }
 
-      window.setTimeout(function () {
-        form.reset();
-        if (btn) {
-          btn.textContent = "Subscribed";
-        }
-        setNote("Check your inbox to confirm your subscription.", "success");
-      }, 500);
+      var payload = {
+        name: nameEl && nameEl.value ? nameEl.value.trim() : "",
+        email: value,
+        source: sourceEl && sourceEl.value ? sourceEl.value : "Blog"
+      };
+
+      fetch(ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+        .then(function (res) {
+          return res.json().catch(function () { return { ok: res.ok }; });
+        })
+        .then(function (data) {
+          if (data && data.ok) {
+            form.reset();
+            if (btn) btn.textContent = "Subscribed";
+            setNote("You're in. Check your inbox to confirm.", "success");
+          } else {
+            if (btn) { btn.disabled = false; btn.textContent = btnLabel; }
+            setNote("Something went wrong. Please try again in a moment.", "error");
+          }
+        })
+        .catch(function () {
+          if (btn) { btn.disabled = false; btn.textContent = btnLabel; }
+          setNote("Network error. Please try again.", "error");
+        });
     });
   }
 
-  document.querySelectorAll('form[data-integration="ghl-pending"]').forEach(init);
+  document.querySelectorAll('form[data-integration="ghl-live"]').forEach(init);
 })();
