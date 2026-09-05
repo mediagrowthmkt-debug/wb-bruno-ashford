@@ -455,3 +455,51 @@ p { margin: 0 0 1rem; }
   .section-head--row { flex-direction: column; align-items: flex-start; }
   .hero-actions .btn { flex: 1 1 auto; text-align: center; }
 }
+
+/* ---------------------------------------------------------------------------
+   Inline lead CTAs inside articles (lead while reading) + honeypot + FAQ spacing
+   Injected AFTER sanitization so these classes survive. Fully responsive:
+   box-sizing + max-width keep them from ever creating horizontal overflow.
+   --------------------------------------------------------------------------- */
+.inline-cta {
+  box-sizing: border-box;
+  max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px 28px;
+  margin: 2.4rem 0;
+  padding: 26px 28px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(201, 161, 92, 0.4);
+  background: linear-gradient(135deg, rgba(43, 33, 26, 0.04), rgba(184, 115, 51, 0.08));
+}
+.inline-cta--accent {
+  border-left: 4px solid var(--copper);
+  background: linear-gradient(135deg, var(--walnut), var(--espresso));
+}
+.inline-cta--accent .eyebrow { color: var(--gold); }
+.inline-cta--accent h3 { color: var(--cream); margin: 4px 0 6px; }
+.inline-cta--accent p { color: rgba(243, 236, 224, 0.82); margin: 0; max-width: 46ch; }
+.inline-cta-copy { flex: 1 1 320px; min-width: 0; }
+.inline-cta .btn { flex: 0 0 auto; white-space: nowrap; }
+
+.article-faq { margin: 3rem 0 1rem; }
+.article-faq .section-head { margin-bottom: 1.6rem; }
+
+#lead-form { scroll-margin-top: 90px; }
+.lead-card { box-sizing: border-box; max-width: 100%; }
+
+/* honeypot: hidden from humans, catches bots */
+.hp-field {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px; height: 1px;
+  opacity: 0; pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .inline-cta { padding: 22px 20px; }
+  .inline-cta .btn { width: 100%; text-align: center; }
+}

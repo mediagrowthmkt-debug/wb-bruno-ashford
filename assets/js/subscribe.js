@@ -21,6 +21,14 @@
     form.addEventListener("submit", function (e) {
       e.preventDefault();
 
+      // honeypot: if a bot filled the hidden field, fake success and bail
+      var hp = form.querySelector('input[name="company_website"]');
+      if (hp && hp.value) {
+        form.reset();
+        setNote("Thanks. Check your inbox.", "success");
+        return;
+      }
+
       var value = (email && email.value ? email.value : "").trim();
       if (!EMAIL_RE.test(value)) {
         setNote("Please enter a valid work email.", "error");
