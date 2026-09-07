@@ -2,7 +2,7 @@
   "schema": "ceu-v1",
   "kind": "design_html_png",
   "agent": "mia",
-  "cliente": "bruno_consultoria",
+  "cliente": "brunoashford",
   "descricao": "Cover hero de blog 16:9 (peca de design branded, HTML->PNG, sem foto/Higgsfield) — Post 'AI Automation Agency: How the Model Actually Works'. Mesmo sistema visual, eyebrow 'AI AUTOMATION AGENCY'. Motivo geometrico: fluxo/ciclo (aneis com setas em bronze).",
   "post": "AI Automation Agency: How the Model Actually Works",
   "source": {
@@ -15,6 +15,6 @@
     },
     "motif": "loop"
   },
-  "render_command": "python3 clientes/_novos_clientes/bruno_consultoria/identidade-visual/_render/gen_blog_covers.py  # HTML->Chrome headless, custo zero; depois magick resize 1600x900 + -colors 256 + cwebp -q 88",
+  "render_command": "python3 clientes/_novos_clientes/brunoashford/identidade-visual/_render/gen_blog_covers.py  # HTML->Chrome headless, custo zero; depois magick resize 1600x900 + -colors 256 + cwebp -q 88",
   "outputs": ["cover-ai-automation-agency.png", "cover-ai-automation-agency.webp"]
 }

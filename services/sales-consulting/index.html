@@ -36,20 +36,130 @@
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="site-header">
+<header class="site-header" data-header>
   <div class="wrap header-inner">
     <a class="brand" href="../../index.html" aria-label="Bruno Ashford home">
-      <img src="../../assets/img/monogram-ba.png" alt="Bruno Ashford monogram" width="44" height="44" class="brand-mark" fetchpriority="high">
+      <span class="brand-mark-wrap" aria-hidden="true">
+        <img src="../../assets/img/monogram-ba.png" alt="" width="44" height="44" class="brand-mark" fetchpriority="high">
+      </span>
       <span class="brand-word">Bruno <span class="brand-accent">Ashford</span></span>
     </a>
     <nav class="site-nav" aria-label="Primary">
-      <a href="../../services/index.html">Services</a>
-      <a href="../../blog/index.html">Insights</a>
-      <a href="../../about/index.html">About</a>
-      <a class="nav-cta" href="../../subscribe/index.html">Subscribe</a>
+      <a href="../../blog/index.html" class="nav-link">Insights</a>
+      <a href="https://www.youtube.com/@brunoashford" class="nav-social" target="_blank" rel="noopener" aria-label="YouTube">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path fill="currentColor" d="M23.5 6.2a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.2C0 8.09 0 12 0 12s0 3.91.5 5.8a3.02 3.02 0 0 0 2.12 2.14c1.88.51 9.38.51 9.38.51s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.91 24 12 24 12s0-3.91-.5-5.8ZM9.6 15.57V8.43L15.82 12 9.6 15.57Z"/></svg>
+      </a>
+      <button type="button" class="nav-cta glow-border" data-lead-modal data-source="Popup: Header - Book a call">Book a call</button>
     </nav>
+    <button type="button" class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+    </button>
   </div>
 </header>
+<div class="mobile-drawer" id="mobile-drawer" data-drawer hidden>
+  <div class="mobile-drawer-backdrop" data-drawer-close></div>
+  <nav class="mobile-drawer-panel" aria-label="Mobile">
+    <div class="mobile-drawer-head">
+      <span class="brand-word">Bruno <span class="brand-accent">Ashford</span></span>
+      <button type="button" class="drawer-close" aria-label="Close menu" data-drawer-close>&times;</button>
+    </div>
+    <a href="../../blog/index.html" class="drawer-link">Insights</a>
+    <button type="button" class="btn btn-primary drawer-cta" data-lead-modal data-source="Popup: Mobile drawer - Book a call">Book a call</button>
+    <a href="https://www.youtube.com/@brunoashford" class="drawer-social" target="_blank" rel="noopener" aria-label="YouTube">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path fill="currentColor" d="M23.5 6.2a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.2C0 8.09 0 12 0 12s0 3.91.5 5.8a3.02 3.02 0 0 0 2.12 2.14c1.88.51 9.38.51 9.38.51s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.91 24 12 24 12s0-3.91-.5-5.8ZM9.6 15.57V8.43L15.82 12 9.6 15.57Z"/></svg>
+      <span>YouTube</span>
+    </a>
+  </nav>
+</div>
+<div class="lead-modal" id="lead-modal" data-lead-modal-root hidden>
+  <div class="lead-modal-backdrop" data-modal-close></div>
+  <div class="lead-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="lead-modal-title" aria-describedby="lead-modal-sub">
+    <button type="button" class="lead-modal-close" aria-label="Close" data-modal-close>&times;</button>
+    <div class="subscribe-copy">
+      <p class="eyebrow">Book a call</p>
+      <h2 id="lead-modal-title">Let's talk about your business.</h2>
+      <p id="lead-modal-sub">A few quick questions. I'll come back personally, one company at a time, US and UK.</p>
+    </div>
+
+    <!-- progress -->
+    <div class="lm-progress" data-lm-progress>
+      <p class="lm-progress-count" data-lm-count>Step 1 of 5</p>
+      <div class="lm-dots" aria-hidden="true">
+        <span class="lm-dot" data-dot="0"></span>
+        <span class="lm-dot" data-dot="1"></span>
+        <span class="lm-dot" data-dot="2"></span>
+        <span class="lm-dot" data-dot="3"></span>
+        <span class="lm-dot" data-dot="4"></span>
+      </div>
+    </div>
+
+    <!-- Live: posts to the secure server-side proxy (GHL CRM). Token stays server-side.
+         Multi-step: only the UI changed; the final POST is identical. -->
+    <form class="subscribe-form lead-modal-form" data-integration="ghl-live" data-lead-modal-form novalidate>
+      <input type="hidden" name="source" value="Popup: Lead modal">
+      <input type="hidden" name="interest" value="">
+      <input type="text" class="hp-field" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <div class="lm-steps">
+        <div class="lm-step" data-step="0">
+          <div class="field">
+            <label for="lm-name">First name</label>
+            <input type="text" id="lm-name" name="name" autocomplete="given-name" placeholder="Jordan" enterkeyhint="next">
+          </div>
+        </div>
+        <div class="lm-step" data-step="1" hidden>
+          <div class="field">
+            <label for="lm-email">Work email</label>
+            <input type="email" id="lm-email" name="email" autocomplete="email" placeholder="you@company.com" required enterkeyhint="next">
+          </div>
+        </div>
+        <div class="lm-step" data-step="2" hidden>
+          <div class="field">
+            <label for="lm-phone">Phone <span class="field-opt">(optional)</span></label>
+            <input type="tel" id="lm-phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="+1 555 123 4567" enterkeyhint="next">
+          </div>
+        </div>
+        <div class="lm-step" data-step="3" hidden>
+          <div class="field">
+            <label for="lm-interest">What are you looking for?</label>
+            <select id="lm-interest" name="interest_choice">
+          <option value="implement">Implement AI in my company</option>
+          <option value="course">The AI Agents Course</option>
+          <option value="personal">Personal AI consulting</option>
+          <option value="exploring">Just exploring / learning more</option>
+            </select>
+          </div>
+        </div>
+        <div class="lm-step" data-step="4" hidden>
+          <div class="field">
+            <label for="lm-detail">Anything else? <span class="field-opt">(optional)</span></label>
+            <textarea id="lm-detail" name="detail" rows="3" placeholder="A line about your company or what you want to solve." enterkeyhint="send"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <p class="form-note" role="status" aria-live="polite"></p>
+
+      <div class="lm-nav">
+        <button type="button" class="btn btn-ghost lm-back" data-lm-back hidden>Back</button>
+        <button type="button" class="btn btn-primary lm-next" data-lm-next>Continue</button>
+        <button type="submit" class="btn btn-primary lm-submit" data-lm-submit hidden>Let's talk</button>
+      </div>
+      <p class="form-fine">A real conversation about your business, not a sales call.</p>
+
+      <!-- success panel (shown after a successful POST) -->
+      <div class="lm-success" data-lm-success hidden>
+        <p class="lm-success-mark" aria-hidden="true">&#10003;</p>
+        <h3>You're in.</h3>
+        <p>Thanks. I'll come back to you personally, one company at a time.</p>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="../../assets/js/header.js" defer></script>
+<script src="../../assets/js/lead-modal.js" defer></script>
 <main id="main">
   <section class="hero svc-hero">
     <div class="wrap hero-inner">
@@ -58,11 +168,11 @@
         <a href="../../services/index.html">Services</a> <span>/</span>
         <span aria-current="page">Sales Consulting</span>
       </nav>
-      <p class="eyebrow eyebrow--gold">Sales Consulting</p>
+      <p class="eyebrow eyebrow--gold eyebrow--pill glow-border"><span class="glow-tick" aria-hidden="true"></span>Sales Consulting</p>
       <h1>Sales Consulting That Makes Revenue Predictable, Not Hopeful</h1>
       <p class="hero-sub">When revenue depends on a few star reps and a good month, growth is a gamble. Bruno Ashford is a sales consulting practice that turns your commercial effort into a repeatable, data-backed process, sharpened with AI.</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="https://calendar.app.google/" rel="noopener">Book a consultation</a>
+        <button type="button" class="btn btn-primary" data-lead-modal data-interest="implement" data-source="Popup: Service (Sales Consulting) - hero">Book a consultation</button>
         <a class="btn btn-ghost" href="../../subscribe/index.html">Get The Ashford Brief</a>
       </div>
       <p class="hero-proof">B2B sales consultant · sales process consulting · United States &amp; United Kingdom</p>
@@ -205,7 +315,7 @@
       <h2>Book a sales consulting conversation</h2>
       <p>One company a month works with Bruno Ashford. If your revenue depends on luck instead of a process, let&#x27;s make it predictable.</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="https://calendar.app.google/" rel="noopener">Book a consultation</a>
+        <button type="button" class="btn btn-primary" data-lead-modal data-interest="implement" data-source="Popup: Service (Sales Consulting) - bottom CTA">Book a consultation</button>
         <a class="btn btn-ghost" href="../../subscribe/index.html">Subscribe to The Ashford Brief</a>
       </div>
     </div>
@@ -225,6 +335,12 @@
       <a href="../../about/index.html">About</a>
       <a href="../../subscribe/index.html">Newsletter</a>
     </nav>
+    <div class="footer-social">
+      <span class="footer-social-label">Follow</span>
+      <a href="https://www.youtube.com/@brunoashford" class="footer-social-link" target="_blank" rel="noopener" aria-label="YouTube">
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M23.5 6.2a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.2C0 8.09 0 12 0 12s0 3.91.5 5.8a3.02 3.02 0 0 0 2.12 2.14c1.88.51 9.38.51 9.38.51s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.91 24 12 24 12s0-3.91-.5-5.8ZM9.6 15.57V8.43L15.82 12 9.6 15.57Z"/></svg>
+      </a>
+    </div>
     <p class="footer-legal">&copy; 2026 Bruno Ashford. Consulting for the United States &amp; United Kingdom.</p>
   </div>
 </footer>

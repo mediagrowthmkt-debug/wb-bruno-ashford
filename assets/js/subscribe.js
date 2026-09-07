@@ -78,5 +78,9 @@
     });
   }
 
-  document.querySelectorAll('form[data-integration="ghl-live"]').forEach(init);
+  // The lead modal form is handled by lead-modal.js (open/close + submit), so
+  // skip it here to avoid binding submit twice.
+  document
+    .querySelectorAll('form[data-integration="ghl-live"]:not([data-lead-modal-form])')
+    .forEach(init);
 })();

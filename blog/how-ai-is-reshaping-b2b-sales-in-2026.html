@@ -36,20 +36,130 @@
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="site-header">
+<header class="site-header" data-header>
   <div class="wrap header-inner">
     <a class="brand" href="../index.html" aria-label="Bruno Ashford home">
-      <img src="../assets/img/monogram-ba.png" alt="Bruno Ashford monogram" width="44" height="44" class="brand-mark" fetchpriority="high">
+      <span class="brand-mark-wrap" aria-hidden="true">
+        <img src="../assets/img/monogram-ba.png" alt="" width="44" height="44" class="brand-mark" fetchpriority="high">
+      </span>
       <span class="brand-word">Bruno <span class="brand-accent">Ashford</span></span>
     </a>
     <nav class="site-nav" aria-label="Primary">
-      <a href="../services/index.html">Services</a>
-      <a href="../blog/index.html">Insights</a>
-      <a href="../about/index.html">About</a>
-      <a class="nav-cta" href="../subscribe/index.html">Subscribe</a>
+      <a href="../blog/index.html" class="nav-link">Insights</a>
+      <a href="https://www.youtube.com/@brunoashford" class="nav-social" target="_blank" rel="noopener" aria-label="YouTube">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path fill="currentColor" d="M23.5 6.2a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.2C0 8.09 0 12 0 12s0 3.91.5 5.8a3.02 3.02 0 0 0 2.12 2.14c1.88.51 9.38.51 9.38.51s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.91 24 12 24 12s0-3.91-.5-5.8ZM9.6 15.57V8.43L15.82 12 9.6 15.57Z"/></svg>
+      </a>
+      <button type="button" class="nav-cta glow-border" data-lead-modal data-source="Popup: Header - Book a call">Book a call</button>
     </nav>
+    <button type="button" class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+    </button>
   </div>
 </header>
+<div class="mobile-drawer" id="mobile-drawer" data-drawer hidden>
+  <div class="mobile-drawer-backdrop" data-drawer-close></div>
+  <nav class="mobile-drawer-panel" aria-label="Mobile">
+    <div class="mobile-drawer-head">
+      <span class="brand-word">Bruno <span class="brand-accent">Ashford</span></span>
+      <button type="button" class="drawer-close" aria-label="Close menu" data-drawer-close>&times;</button>
+    </div>
+    <a href="../blog/index.html" class="drawer-link">Insights</a>
+    <button type="button" class="btn btn-primary drawer-cta" data-lead-modal data-source="Popup: Mobile drawer - Book a call">Book a call</button>
+    <a href="https://www.youtube.com/@brunoashford" class="drawer-social" target="_blank" rel="noopener" aria-label="YouTube">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path fill="currentColor" d="M23.5 6.2a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.2C0 8.09 0 12 0 12s0 3.91.5 5.8a3.02 3.02 0 0 0 2.12 2.14c1.88.51 9.38.51 9.38.51s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.91 24 12 24 12s0-3.91-.5-5.8ZM9.6 15.57V8.43L15.82 12 9.6 15.57Z"/></svg>
+      <span>YouTube</span>
+    </a>
+  </nav>
+</div>
+<div class="lead-modal" id="lead-modal" data-lead-modal-root hidden>
+  <div class="lead-modal-backdrop" data-modal-close></div>
+  <div class="lead-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="lead-modal-title" aria-describedby="lead-modal-sub">
+    <button type="button" class="lead-modal-close" aria-label="Close" data-modal-close>&times;</button>
+    <div class="subscribe-copy">
+      <p class="eyebrow">Book a call</p>
+      <h2 id="lead-modal-title">Let's talk about your business.</h2>
+      <p id="lead-modal-sub">A few quick questions. I'll come back personally, one company at a time, US and UK.</p>
+    </div>
+
+    <!-- progress -->
+    <div class="lm-progress" data-lm-progress>
+      <p class="lm-progress-count" data-lm-count>Step 1 of 5</p>
+      <div class="lm-dots" aria-hidden="true">
+        <span class="lm-dot" data-dot="0"></span>
+        <span class="lm-dot" data-dot="1"></span>
+        <span class="lm-dot" data-dot="2"></span>
+        <span class="lm-dot" data-dot="3"></span>
+        <span class="lm-dot" data-dot="4"></span>
+      </div>
+    </div>
+
+    <!-- Live: posts to the secure server-side proxy (GHL CRM). Token stays server-side.
+         Multi-step: only the UI changed; the final POST is identical. -->
+    <form class="subscribe-form lead-modal-form" data-integration="ghl-live" data-lead-modal-form novalidate>
+      <input type="hidden" name="source" value="Popup: Lead modal">
+      <input type="hidden" name="interest" value="">
+      <input type="text" class="hp-field" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <div class="lm-steps">
+        <div class="lm-step" data-step="0">
+          <div class="field">
+            <label for="lm-name">First name</label>
+            <input type="text" id="lm-name" name="name" autocomplete="given-name" placeholder="Jordan" enterkeyhint="next">
+          </div>
+        </div>
+        <div class="lm-step" data-step="1" hidden>
+          <div class="field">
+            <label for="lm-email">Work email</label>
+            <input type="email" id="lm-email" name="email" autocomplete="email" placeholder="you@company.com" required enterkeyhint="next">
+          </div>
+        </div>
+        <div class="lm-step" data-step="2" hidden>
+          <div class="field">
+            <label for="lm-phone">Phone <span class="field-opt">(optional)</span></label>
+            <input type="tel" id="lm-phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="+1 555 123 4567" enterkeyhint="next">
+          </div>
+        </div>
+        <div class="lm-step" data-step="3" hidden>
+          <div class="field">
+            <label for="lm-interest">What are you looking for?</label>
+            <select id="lm-interest" name="interest_choice">
+          <option value="implement">Implement AI in my company</option>
+          <option value="course">The AI Agents Course</option>
+          <option value="personal">Personal AI consulting</option>
+          <option value="exploring">Just exploring / learning more</option>
+            </select>
+          </div>
+        </div>
+        <div class="lm-step" data-step="4" hidden>
+          <div class="field">
+            <label for="lm-detail">Anything else? <span class="field-opt">(optional)</span></label>
+            <textarea id="lm-detail" name="detail" rows="3" placeholder="A line about your company or what you want to solve." enterkeyhint="send"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <p class="form-note" role="status" aria-live="polite"></p>
+
+      <div class="lm-nav">
+        <button type="button" class="btn btn-ghost lm-back" data-lm-back hidden>Back</button>
+        <button type="button" class="btn btn-primary lm-next" data-lm-next>Continue</button>
+        <button type="submit" class="btn btn-primary lm-submit" data-lm-submit hidden>Let's talk</button>
+      </div>
+      <p class="form-fine">A real conversation about your business, not a sales call.</p>
+
+      <!-- success panel (shown after a successful POST) -->
+      <div class="lm-success" data-lm-success hidden>
+        <p class="lm-success-mark" aria-hidden="true">&#10003;</p>
+        <h3>You're in.</h3>
+        <p>Thanks. I'll come back to you personally, one company at a time.</p>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="../assets/js/header.js" defer></script>
+<script src="../assets/js/lead-modal.js" defer></script>
 <main id="main">
   <article class="article">
     <div class="wrap wrap--narrow">
@@ -85,7 +195,7 @@
     <h3>What could an AI system run in YOUR business?</h3>
     <p>Every company automates something different. Get a plain-English map of the workflows AI could take off your plate first.</p>
   </div>
-  <a class="btn btn-primary" href="#lead-form">Map my automation</a>
+  <button type="button" class="btn btn-primary" data-lead-modal data-interest="exploring" data-source="Popup: Blog inline CTA">Map my automation</button>
 </aside><h2>The three places AI earns its keep</h2>
 <p>Not every part of the sales cycle benefits equally. In practice, the return concentrates in three areas.</p>
 <ol><li>1. <strong>Research and prep.</strong> What used to take a rep twenty minutes per account now takes seconds: a tailored brief with the buyer's priorities, likely objections, and a relevant proof point. Reps walk into calls prepared, not improvising.</li><li>2. <strong>Follow-up and continuity.</strong> Deals die in the gaps between conversations. AI drafts the recap, flags the next step, and keeps momentum without the rep remembering to. The buyer experiences a team that never drops the thread.</li><li>3. <strong>Forecasting and coaching.</strong> Instead of a pipeline built on optimism, leaders get a forecast grounded in real deal behavior, and managers get to coach the two moments in a call that actually changed the outcome.</li></ol>
@@ -100,7 +210,7 @@
     <h3>Want to build a system like this yourself?</h3>
     <p>This whole engine is built in Claude Code, one workflow at a time. Tell me your business and I will show you where to start.</p>
   </div>
-  <a class="btn btn-primary" href="#lead-form">Show me how</a>
+  <button type="button" class="btn btn-primary" data-lead-modal data-interest="exploring" data-source="Popup: Blog inline CTA">Show me how</button>
 </aside><h2>How to adopt it without breaking your engine</h2>
 <p>The most common mistake in 2026 is bolting AI onto a broken process and expecting it to fix the process. It will not. It will simply do the wrong thing faster.</p>
 <p>A cleaner path looks like this:</p>
@@ -114,60 +224,34 @@
     
     <div class="wrap wrap--narrow">
       <div id="lead-form">
-        <section class="subscribe-card subscribe-card--compact lead-card" aria-labelledby="lead-h">
+        <section class="subscribe-card subscribe-card--compact lead-card cta-card" aria-labelledby="lead-h">
   <div class="subscribe-copy">
     <p class="eyebrow">Get your AI automation map</p>
     <h2 id="lead-h">See what you could automate in your business</h2>
     <p>Tell me your business and I will send back a short, plain-English map of what an AI system could run for you, the exact workflows to start with, and how to build it yourself. No pitch. One company at a time, US and UK.</p>
   </div>
-  <!-- Live: posts to the secure server-side proxy (GHL CRM). Token stays server-side. -->
-  <form class="subscribe-form" data-integration="ghl-live" novalidate>
-    <input type="hidden" name="source" value="Blog: how-ai-is-reshaping-b2b-sales-in-2026">
-    <input type="text" class="hp-field" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
-    <div class="field">
-      <label for="lead-name">First name</label>
-      <input type="text" id="lead-name" name="name" autocomplete="given-name" placeholder="Jordan">
-    </div>
-    <div class="field">
-      <label for="lead-email">Work email</label>
-      <input type="email" id="lead-email" name="email" autocomplete="email" placeholder="you@company.com" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Send me my map</button>
-    <p class="form-note" role="status" aria-live="polite"></p>
+  <div class="cta-card-action">
+    <button type="button" class="btn btn-primary" data-lead-modal data-interest="exploring" data-source="Blog: how-ai-is-reshaping-b2b-sales-in-2026">Send me my map</button>
     <p class="form-fine">A real conversation about your business, not a sales call.</p>
-  </form>
+  </div>
 </section>
-<script src="../assets/js/subscribe.js" defer></script>
       </div>
     </div>
   </article>
 
   <section class="section subscribe-section">
     <div class="wrap wrap--narrow">
-      <section class="subscribe-card subscribe-card--compact" aria-labelledby="sub-h">
+      <section class="subscribe-card subscribe-card--compact cta-card" aria-labelledby="sub-h">
   <div class="subscribe-copy">
     <p class="eyebrow">The Ashford Brief</p>
     <h2 id="sub-h">Enjoyed this? Get the next one first.</h2>
     <p>One sharp idea each week on sales, AI, and paid traffic. Written for founders and executives who want compounding growth, not noise.</p>
   </div>
-  <!-- Live: posts to the secure server-side proxy (GHL CRM). Token stays server-side. -->
-  <form class="subscribe-form" data-integration="ghl-live" novalidate>
-    <input type="hidden" name="source" value="Newsletter: The Ashford Brief">
-    <input type="text" class="hp-field" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
-    <div class="field">
-      <label for="sub-name">First name</label>
-      <input type="text" id="sub-name" name="name" autocomplete="given-name" placeholder="Jordan">
-    </div>
-    <div class="field">
-      <label for="sub-email">Work email</label>
-      <input type="email" id="sub-email" name="email" autocomplete="email" placeholder="you@company.com" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Subscribe</button>
-    <p class="form-note" role="status" aria-live="polite"></p>
+  <div class="cta-card-action">
+    <button type="button" class="btn btn-primary" data-lead-modal data-interest="exploring" data-source="Newsletter: The Ashford Brief">Subscribe</button>
     <p class="form-fine">No spam. Unsubscribe anytime.</p>
-  </form>
+  </div>
 </section>
-<script src="../assets/js/subscribe.js" defer></script>
     </div>
   </section>
   <section class="section more-section">
@@ -175,7 +259,7 @@
       <div class="section-head"><p class="eyebrow">Keep reading</p><h2>More insights</h2></div>
       <div class="card-grid"><article class="card">
   <a class="card-link" href="../blog/how-companies-use-ai-in-2026.html">
-    <div class="card-cover" style="background-image:url(../assets/img/covers/cover-how-companies-use-ai.webp)"></div>
+    <div class="card-cover" style="background-image:url(../assets/img/covers/yt-edmAECbA7OQ.webp)"></div>
     <div class="card-body">
       <div class="card-tags"><span class="tag">How Companies Use AI</span><span class="tag">AI Agents</span></div>
       <h3>How Companies Use AI in 2026: From Chat to Agents</h3>
@@ -186,7 +270,7 @@
 </article>
 <article class="card">
   <a class="card-link" href="../blog/ai-agents-for-business-operating-system.html">
-    <div class="card-cover" style="background-image:url(../assets/img/covers/cover-ai-operating-system.webp)"></div>
+    <div class="card-cover" style="background-image:url(../assets/img/covers/yt-_L9s1d0FS2I.webp)"></div>
     <div class="card-body">
       <div class="card-tags"><span class="tag">AI for Business</span><span class="tag">AI Agents</span></div>
       <h3>AI Operating System for Business: Watch One Run a Company</h3>
@@ -198,6 +282,7 @@
     </div>
   </section>
 </main>
+
 <footer class="site-footer">
   <div class="wrap footer-inner">
     <div class="footer-brand">
@@ -212,6 +297,12 @@
       <a href="../about/index.html">About</a>
       <a href="../subscribe/index.html">Newsletter</a>
     </nav>
+    <div class="footer-social">
+      <span class="footer-social-label">Follow</span>
+      <a href="https://www.youtube.com/@brunoashford" class="footer-social-link" target="_blank" rel="noopener" aria-label="YouTube">
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M23.5 6.2a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.2C0 8.09 0 12 0 12s0 3.91.5 5.8a3.02 3.02 0 0 0 2.12 2.14c1.88.51 9.38.51 9.38.51s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.91 24 12 24 12s0-3.91-.5-5.8ZM9.6 15.57V8.43L15.82 12 9.6 15.57Z"/></svg>
+      </a>
+    </div>
     <p class="footer-legal">&copy; 2026 Bruno Ashford. Consulting for the United States &amp; United Kingdom.</p>
   </div>
 </footer>

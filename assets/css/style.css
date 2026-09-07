@@ -95,17 +95,80 @@ p { margin: 0 0 1rem; }
   transition: transform .15s ease, background .2s ease, color .2s ease;
 }
 .btn-primary {
+  position: relative;
+  isolation: isolate;
+  --glow-thickness: 2px; /* a touch thicker reads better as a border beam on the filled button */
   background: linear-gradient(135deg, var(--bronze), var(--copper));
   color: var(--ink);
   box-shadow: 0 10px 24px -12px rgba(184, 115, 51, 0.8);
 }
 .btn-primary:hover { transform: translateY(-2px); }
+
+/* Primary CTAs carry the rotating gold border beam (reuses .glow-border logic).
+   The bronze fill covers the interior, so only the ~2px frame catches the beam. */
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  padding: var(--glow-thickness, 2px);
+  background: conic-gradient(
+    from var(--glow-angle),
+    transparent 0deg,
+    rgba(201, 161, 92, 0.15) 40deg,
+    var(--gold) 74deg,
+    #fff6e2 84deg,
+    var(--gold) 94deg,
+    rgba(184, 115, 51, 0.15) 128deg,
+    transparent 168deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: glow-border-spin var(--glow-speed, 4.2s) linear infinite;
+  pointer-events: none;
+}
+@supports not (background: conic-gradient(from var(--glow-angle), #000, #fff)) {
+  .btn-primary::before {
+    background: linear-gradient(120deg, rgba(201, 161, 92, 0.35), var(--gold), #fff6e2, var(--gold), rgba(201, 161, 92, 0.35));
+    background-size: 220% 100%;
+    animation: glow-shimmer var(--glow-speed, 4.2s) ease-in-out infinite;
+  }
+}
+
 .btn-ghost {
   background: transparent;
   border-color: currentColor;
   color: inherit;
+  transition: transform .15s ease, background .2s ease, color .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
-.btn-ghost:hover { background: rgba(201, 161, 92, 0.14); }
+/* Secondary/ghost: no beam. Just a discreet gold glow on hover. */
+.btn-ghost:hover {
+  background: rgba(201, 161, 92, 0.14);
+  border-color: rgba(231, 201, 143, 0.7);
+  box-shadow: 0 0 0 1px rgba(231, 201, 143, 0.25), 0 8px 24px -14px rgba(231, 201, 143, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary::before {
+    animation: none;
+    background: conic-gradient(
+      from 300deg,
+      transparent 0deg,
+      rgba(231, 201, 143, 0.5) 90deg,
+      var(--gold) 120deg,
+      transparent 210deg,
+      transparent 360deg
+    );
+  }
+}
 
 .link-arrow {
   font-family: var(--font-body);
@@ -117,34 +180,191 @@ p { margin: 0 0 1rem; }
 }
 .link-arrow:hover { border-color: var(--cognac); }
 
-/* header */
+/* =========================================================================
+   HEADER — premium sticky, ALWAYS DARK walnut (never light/cream). Two states:
+   • top (default): dark translucent walnut with a light glass blur, hairline
+     bronze divider. Coherent with the dark hero.
+   • scrolled (.is-scrolled, toggled by header.js): deepens the walnut glass +
+     stronger blur, brighter hairline bronze + soft shadow, compacted height.
+   Text in cream, accents in bronze/gold. Transition is smooth between states.
+   ========================================================================= */
 .site-header {
-  position: sticky; top: 0; z-index: 40;
-  background: rgba(43, 33, 26, 0.92);
-  backdrop-filter: saturate(140%) blur(8px);
-  border-bottom: 1px solid rgba(231, 201, 143, 0.14);
+  position: sticky; top: 0; z-index: 60;
+  /* Solidly DARK walnut even over a light hero: a strong warm-dark walnut with
+     a gradient a touch more opaque at the top. No cream/grey bleed-through. */
+  background:
+    linear-gradient(180deg, rgba(20, 15, 11, 0.97) 0%, rgba(26, 20, 16, 0.93) 100%);
+  -webkit-backdrop-filter: saturate(135%) blur(8px);
+  backdrop-filter: saturate(135%) blur(8px);
+  border-bottom: 1px solid rgba(201, 161, 92, 0.14);
+  transition: background .35s ease, backdrop-filter .35s ease,
+              border-color .35s ease, box-shadow .35s ease;
 }
-.header-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
-.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-.brand-mark { width: 44px; height: 44px; object-fit: contain; }
+.site-header.is-scrolled {
+  background:
+    linear-gradient(180deg, rgba(20, 15, 11, 0.94) 0%, rgba(30, 23, 18, 0.9) 100%);
+  -webkit-backdrop-filter: saturate(150%) blur(14px);
+  backdrop-filter: saturate(150%) blur(14px);
+  border-bottom-color: rgba(201, 161, 92, 0.3);
+  box-shadow: 0 14px 40px -22px rgba(0, 0, 0, 0.65);
+}
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 84px;
+  transition: height .35s ease;
+}
+.site-header.is-scrolled .header-inner { height: 66px; }
+
+/* brand: monogram in a subtle bronze-ringed disc + wordmark */
+.brand { display: flex; align-items: center; gap: 13px; text-decoration: none; }
+.brand-mark-wrap {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 46px; height: 46px; border-radius: 50%;
+  background: radial-gradient(120% 120% at 30% 25%, rgba(231, 201, 143, 0.14), rgba(201, 161, 92, 0.04) 60%, transparent);
+  box-shadow: inset 0 0 0 1px rgba(201, 161, 92, 0.30);
+  transition: box-shadow .3s ease, transform .3s ease;
+}
+.brand:hover .brand-mark-wrap {
+  box-shadow: inset 0 0 0 1px rgba(231, 201, 143, 0.6), 0 0 18px -6px rgba(231, 201, 143, 0.5);
+  transform: translateY(-1px);
+}
+.brand-mark { width: 40px; height: 40px; object-fit: contain; display: block; }
 .brand-word {
   font-family: var(--font-display);
-  font-size: 1.35rem; font-weight: 600; letter-spacing: 0.01em;
+  font-size: 1.4rem; font-weight: 600; letter-spacing: 0.015em;
   color: var(--cream);
 }
 .brand-accent { color: var(--bronze); }
-.site-nav { display: flex; align-items: center; gap: 28px; }
-.site-nav a {
+
+/* nav links: animated bronze underline that grows from the left */
+.site-nav { display: flex; align-items: center; gap: 34px; }
+.nav-link {
+  position: relative;
   text-decoration: none; color: var(--cream);
-  font-size: 0.9rem; letter-spacing: 0.04em; font-weight: 400;
-  opacity: 0.86; transition: opacity .2s ease;
+  font-size: 0.9rem; letter-spacing: 0.05em; font-weight: 400;
+  opacity: 0.86; padding: 6px 0;
+  transition: opacity .2s ease, color .2s ease;
 }
-.site-nav a:hover { opacity: 1; }
+.nav-link::after {
+  content: ""; position: absolute; left: 0; bottom: 0;
+  height: 1.5px; width: 100%;
+  transform: scaleX(0); transform-origin: left center;
+  background: linear-gradient(90deg, var(--copper), var(--bronze), var(--gold));
+  transition: transform .3s cubic-bezier(.4, 0, .2, 1);
+}
+.nav-link:hover { opacity: 1; color: var(--gold); }
+.nav-link:hover::after,
+.nav-link[aria-current="page"]::after { transform: scaleX(1); }
+.nav-link[aria-current="page"] { opacity: 1; color: var(--gold); }
+
+/* header CTA: bordered pill carrying the rotating gold beam (.glow-border) */
 .nav-cta {
-  border: 1px solid var(--bronze); color: var(--gold) !important;
-  padding: 8px 20px; border-radius: 999px; opacity: 1 !important;
+  --glow-thickness: 1.5px;
+  border: 1px solid rgba(201, 161, 92, 0.55);
+  color: var(--gold) !important;
+  font-family: var(--font-body);
+  font-size: 0.9rem; letter-spacing: 0.04em; font-weight: 500;
+  text-decoration: none;
+  padding: 9px 22px; border-radius: 999px; opacity: 1 !important;
+  background: rgba(201, 161, 92, 0.06);
+  transition: background .25s ease, color .25s ease, box-shadow .25s ease, transform .2s ease;
 }
-.nav-cta:hover { background: rgba(201, 161, 92, 0.16); }
+.nav-cta:hover {
+  background: rgba(201, 161, 92, 0.2);
+  box-shadow: 0 0 0 1px rgba(231, 201, 143, 0.3), 0 8px 22px -12px rgba(231, 201, 143, 0.65);
+  transform: translateY(-1px);
+}
+
+/* header social icon (YouTube) — discreet, bronze/cream, hover realces */
+.nav-social {
+  display: inline-flex; align-items: center; justify-content: center;
+  color: rgba(243, 236, 224, 0.72);
+  transition: color .25s ease, transform .2s ease;
+}
+.nav-social svg { display: block; }
+.nav-social:hover { color: var(--gold); transform: translateY(-1px); }
+
+/* drawer social icon (YouTube) — same monochrome cream/gold treatment */
+.drawer-social {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-top: 8px; text-decoration: none;
+  color: rgba(243, 236, 224, 0.72);
+  font-family: var(--font-body); font-size: 0.95rem; letter-spacing: 0.03em;
+  transition: color .25s ease;
+}
+.drawer-social svg { display: block; }
+.drawer-social:hover { color: var(--gold); }
+
+/* hamburger — hidden on desktop, shown on mobile */
+.nav-toggle {
+  display: none;
+  width: 44px; height: 44px; padding: 0;
+  background: transparent; border: 1px solid rgba(201, 161, 92, 0.35);
+  border-radius: 12px; cursor: pointer;
+  flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+}
+.nav-toggle-bar {
+  display: block; width: 20px; height: 2px; border-radius: 2px;
+  background: var(--cream);
+  transition: transform .3s ease, opacity .2s ease;
+}
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* mobile drawer */
+.mobile-drawer { position: fixed; inset: 0; z-index: 80; }
+.mobile-drawer[hidden] { display: none; }
+.mobile-drawer-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(10, 8, 6, 0.6);
+  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  opacity: 0; transition: opacity .3s ease;
+}
+.mobile-drawer.is-open .mobile-drawer-backdrop { opacity: 1; }
+.mobile-drawer-panel {
+  position: absolute; top: 0; right: 0; height: 100%;
+  width: min(84vw, 340px);
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 22px 24px calc(24px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(165deg, var(--walnut), var(--ink) 88%);
+  border-left: 1px solid rgba(201, 161, 92, 0.24);
+  box-shadow: -24px 0 60px -24px rgba(0, 0, 0, 0.7);
+  transform: translateX(100%);
+  transition: transform .34s cubic-bezier(.4, 0, .2, 1);
+}
+.mobile-drawer.is-open .mobile-drawer-panel { transform: translateX(0); }
+.mobile-drawer-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 18px; margin-bottom: 10px;
+  border-bottom: 1px solid rgba(201, 161, 92, 0.18);
+}
+.drawer-close {
+  width: 40px; height: 40px; line-height: 1;
+  font-size: 1.8rem; color: var(--cream);
+  background: transparent; border: 0; cursor: pointer;
+  border-radius: 10px; transition: color .2s ease, background .2s ease;
+}
+.drawer-close:hover { color: var(--gold); background: rgba(201, 161, 92, 0.12); }
+.drawer-link {
+  display: block; text-decoration: none;
+  color: var(--cream); font-family: var(--font-display);
+  font-size: 1.5rem; font-weight: 500; letter-spacing: 0.01em;
+  padding: 14px 6px;
+  border-bottom: 1px solid rgba(243, 236, 224, 0.07);
+  transition: color .2s ease, padding-left .2s ease;
+}
+.drawer-link:hover { color: var(--gold); padding-left: 12px; }
+.drawer-cta { margin-top: 22px; text-align: center; }
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header, .header-inner, .brand-mark-wrap,
+  .nav-link, .nav-link::after, .nav-cta,
+  .mobile-drawer-panel, .mobile-drawer-backdrop,
+  .nav-toggle-bar, .drawer-link, .drawer-close {
+    transition: none;
+  }
+}
 
 /* hero */
 .hero {
@@ -172,6 +392,275 @@ p { margin: 0 0 1rem; }
   color: rgba(231, 201, 143, 0.6); margin: 0;
 }
 
+/* home hero — photo on the right, copy over the dark left of the image.
+   TRANSITION TECHNIQUE (mask, not overlay): the base of the hero is CREAM, and
+   every dark layer (the walnut+photo media, and the readability wash) is faded
+   out by ALPHA with mask-image at the bottom. When the dark layers vanish, the
+   cream base shows through cleanly, so the photo dissolves into cream with no
+   gray haze and no line. Ref: ishadeed.com/article/css-masking. */
+.hero--home {
+  position: relative;
+  overflow: hidden;
+  /* extra bottom padding gives the mask fade room below the marquee */
+  padding: clamp(88px, 12vw, 168px) 0 clamp(150px, 18vw, 240px);
+  background: var(--cream); /* what shows once the masked dark layers fade out */
+  border-bottom: 0; /* no divider line between hero and the capture section */
+}
+/* shared alpha mask: opaque through the top, fades to transparent at the base */
+.hero--home .hero-media,
+.hero--home::after {
+  -webkit-mask-image: linear-gradient(to bottom,
+    #000 0%, #000 62%, rgba(0,0,0,0.85) 72%, rgba(0,0,0,0.5) 82%,
+    rgba(0,0,0,0.2) 91%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(to bottom,
+    #000 0%, #000 62%, rgba(0,0,0,0.85) 72%, rgba(0,0,0,0.5) 82%,
+    rgba(0,0,0,0.2) 91%, rgba(0,0,0,0) 100%);
+}
+.hero--home .hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  background: var(--walnut); /* fills the non-photo (left) area, masked with the photo */
+}
+.hero--home .hero-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right center;
+}
+/* left-to-right walnut wash keeps the copy readable over the two dark thirds.
+   It carries the same bottom alpha mask, so it never reappears as a dark band. */
+.hero--home::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, var(--ink) 0%, rgba(26, 20, 16, 0.92) 32%, rgba(26, 20, 16, 0.55) 52%, rgba(26, 20, 16, 0.12) 72%, rgba(26, 20, 16, 0) 100%),
+    linear-gradient(180deg, rgba(26, 20, 16, 0.35), rgba(26, 20, 16, 0) 40%, rgba(26, 20, 16, 0.35));
+  pointer-events: none;
+}
+.hero--home .hero-inner { position: relative; z-index: 3; }
+.hero--home .hero-copy { max-width: 620px; }
+.hero--home h1 { font-size: clamp(2.8rem, 6vw, 4.6rem); }
+.hero--home .hero-sub { max-width: 540px; }
+
+/* =========================================================================
+   REUSABLE GOLD SHINE UTILITIES (Bruno Ashford)
+   -------------------------------------------------------------------------
+   .glow-border  — a thin gold "border beam" that rotates continuously around
+                   the element's border only (center stays untouched). Works on
+                   any bordered element: eyebrow pills AND primary CTAs.
+   .glow-tick    — a short rule whose bright gold peak sweeps across in a loop.
+   .eyebrow--pill— the premium pill shell (bordered chip on walnut) used by the
+                   hero kickers site-wide; it composes .glow-border.
+   Gold: #E7C98F peak, #C9A15C / #B87333 accents. Rotation 4.2s. Premium/subtle.
+   Reduced motion: everything static (fixed faint glow, no rotation).
+   ========================================================================= */
+@property --glow-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes glow-border-spin {
+  to { --glow-angle: 360deg; }
+}
+
+/* Rotating gold beam on the border only.
+   Technique: a ::before painted with conic-gradient(from var(--glow-angle))
+   whose angle animates 0->360deg (via @property for smooth interpolation),
+   masked with a padding-box vs border-box XOR composite so the gradient shows
+   ONLY on the ~1.5px frame — the interior stays hollow. */
+.glow-border {
+  position: relative;
+  isolation: isolate;
+}
+.glow-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1; /* behind content, over the element's own background */
+  border-radius: inherit;
+  padding: var(--glow-thickness, 1.5px);
+  background: conic-gradient(
+    from var(--glow-angle),
+    transparent 0deg,
+    rgba(201, 161, 92, 0.15) 40deg,
+    var(--gold) 74deg,
+    #fff6e2 84deg,
+    var(--gold) 94deg,
+    rgba(184, 115, 51, 0.15) 128deg,
+    transparent 168deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: glow-border-spin var(--glow-speed, 4.2s) linear infinite;
+  pointer-events: none;
+}
+
+/* Fallback for browsers without @property: angle can't interpolate, so run a
+   soft gold shimmer across a static gold ring instead of a rotating arc. */
+@supports not (background: conic-gradient(from var(--glow-angle), #000, #fff)) {
+  .glow-border::before {
+    background: linear-gradient(
+      120deg,
+      rgba(201, 161, 92, 0.35),
+      var(--gold),
+      #fff6e2,
+      var(--gold),
+      rgba(201, 161, 92, 0.35)
+    );
+    background-size: 220% 100%;
+    animation: glow-shimmer var(--glow-speed, 4.2s) ease-in-out infinite;
+  }
+}
+@keyframes glow-shimmer {
+  0%   { background-position: 0% 50%; opacity: 0.7; }
+  50%  { background-position: 100% 50%; opacity: 1; }
+  100% { background-position: 0% 50%; opacity: 0.7; }
+}
+
+/* Short rule with a bright gold-light peak sweeping across (coordinated 4.2s). */
+.glow-tick {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--copper),
+    var(--bronze),
+    var(--gold),
+    #fff6e2,
+    var(--gold),
+    var(--bronze),
+    var(--copper)
+  );
+  background-size: 240% 100%;
+  animation: glow-tick-shimmer var(--glow-speed, 4.2s) ease-in-out infinite;
+}
+@keyframes glow-tick-shimmer {
+  0%   { background-position: 100% 50%; }
+  50%  { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* Premium pill shell for hero kickers (was .hero-eyebrow, now reusable). */
+.eyebrow--pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.4rem;
+  padding: 8px 16px 8px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  color: var(--gold);
+  border: 1px solid rgba(201, 161, 92, 0.42);
+  border-radius: 999px;
+  background: rgba(201, 161, 92, 0.08);
+  box-shadow: inset 0 1px 0 rgba(243, 236, 224, 0.06);
+}
+/* the pill's uppercase text stays legible above the beam */
+.eyebrow--pill > :not(.glow-tick) { position: relative; z-index: 1; }
+
+/* Reduced motion: no rotation/sweep anywhere. Keep a subtle static gold glow. */
+@media (prefers-reduced-motion: reduce) {
+  .glow-border::before {
+    animation: none;
+    background: conic-gradient(
+      from 300deg,
+      transparent 0deg,
+      rgba(231, 201, 143, 0.5) 90deg,
+      var(--gold) 120deg,
+      transparent 210deg,
+      transparent 360deg
+    );
+  }
+  .glow-tick {
+    animation: none;
+    background: linear-gradient(90deg, var(--copper), var(--bronze), var(--gold));
+    background-size: 100% 100%;
+  }
+}
+
+/* highlighted phrase in the hero sub — Rough Notation marker draws behind it.
+   Slight weight + brighter cream so it reads as emphasis even over the marker. */
+.hero-highlight {
+  position: relative;
+  color: var(--cream);
+  font-weight: 500;
+}
+
+/* hero marquee — the AI stack sliding below the CTAs, still inside the hero.
+   Cream silhouette logos scroll seamlessly; edges fade; hover + reduced-motion
+   pause the slide. */
+.hero-marquee {
+  margin-top: 2.4rem;
+  max-width: 560px;
+}
+.marquee-label {
+  margin: 0 0 0.9rem;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(201, 161, 92, 0.72);
+}
+.marquee-viewport {
+  position: relative;
+  overflow: hidden;
+  /* soft fade on both edges so logos surface/vanish instead of clipping */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
+}
+.marquee-track {
+  display: flex;
+  align-items: center;
+  gap: 44px;
+  width: max-content;
+  margin: 0;
+  padding: 6px 0;
+  list-style: none;
+  animation: hero-marquee-slide 34s linear infinite;
+}
+.marquee-viewport:hover .marquee-track {
+  animation-play-state: paused;
+}
+.marquee-item {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  opacity: 0.65;
+  transition: opacity 0.3s ease;
+}
+.marquee-item:hover {
+  opacity: 1;
+}
+.marquee-logo {
+  height: 30px;
+  width: auto;
+  max-width: 120px;
+  object-fit: contain;
+  display: block;
+}
+@keyframes hero-marquee-slide {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+}
+
 /* section heads */
 .section-head { max-width: 620px; margin-bottom: 2.6rem; }
 .section-head--row { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; max-width: none; }
@@ -189,6 +678,15 @@ p { margin: 0 0 1rem; }
 .pillar:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
 .pillar h3 { color: var(--espresso); }
 .pillar p { color: var(--text-soft); margin: 0; }
+/* numbered kicker for the homepage service cards */
+.pillar-num {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--copper);
+  margin-bottom: 0.6rem;
+}
+.pillar p:has(.link-arrow) { margin-top: 1.1rem; }
 
 /* cards */
 .card-grid { display: grid; gap: 28px; grid-template-columns: repeat(3, 1fr); }
@@ -232,18 +730,48 @@ p { margin: 0 0 1rem; }
 .subscribe-copy h2 { color: var(--cream); }
 .subscribe-copy p { color: rgba(243, 236, 224, 0.78); margin: 0; }
 .subscribe-form { display: flex; flex-direction: column; gap: 14px; }
+
+/* unified capture: CTA that opens the step-by-step modal (replaces inline forms) */
+.cta-card-action { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.cta-card-action .btn-primary { align-self: stretch; text-align: center; }
+.cta-card:not(.subscribe-card--compact) .cta-card-action { justify-content: center; }
+.hero-capture-action { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; position: relative; z-index: 1; }
+.hero-capture-action .btn-primary { align-self: stretch; text-align: center; }
+@media (min-width: 640px) {
+  .cta-card-action .btn-primary,
+  .hero-capture-action .btn-primary { align-self: flex-start; padding-left: 34px; padding-right: 34px; }
+}
 .field { display: flex; flex-direction: column; gap: 6px; }
 .field label {
   font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--gold); font-weight: 500;
 }
-.field input {
+.field input,
+.field select,
+.field textarea {
   font-family: var(--font-body); font-size: 1rem; padding: 13px 16px;
   border-radius: 10px; border: 1px solid rgba(231, 201, 143, 0.28);
   background: rgba(26, 20, 16, 0.5); color: var(--cream);
+  width: 100%; box-sizing: border-box;
 }
-.field input::placeholder { color: rgba(243, 236, 224, 0.4); }
-.field input:focus {
+.field textarea { resize: vertical; min-height: 48px; }
+.field select {
+  appearance: none; -webkit-appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--bronze) 50%),
+    linear-gradient(135deg, var(--bronze) 50%, transparent 50%);
+  background-position: right 18px center, right 13px center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 38px; cursor: pointer;
+}
+.field select option { background: var(--walnut); color: var(--cream); }
+.field-opt { text-transform: none; letter-spacing: 0; color: rgba(243, 236, 224, 0.45); font-weight: 400; }
+.field input::placeholder,
+.field textarea::placeholder { color: rgba(243, 236, 224, 0.4); }
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
   outline: none; border-color: var(--bronze);
   box-shadow: 0 0 0 3px rgba(201, 161, 92, 0.22);
 }
@@ -252,6 +780,51 @@ p { margin: 0 0 1rem; }
 .form-note.is-error { color: #E9A178; }
 .form-note.is-success { color: var(--gold); }
 .form-fine { margin: 0; font-size: 0.78rem; color: rgba(243, 236, 224, 0.5); }
+
+/* Home hero capture — premium walnut card right below the hero. Same lead
+   mechanics/inputs as the newsletter; submit is a primary CTA (gold beam). */
+/* Capture section is the SAME cream as the pillars section. The hero's dark
+   layers fade out by alpha-mask into this cream (see the mask on .hero-media
+   and ::after), so the join is a single continuous cream surface. A small
+   negative margin overlaps the section a few px over the hero base to cover any
+   sub-pixel residue at the exact meeting row. */
+.hero-capture-section {
+  position: relative;
+  z-index: 1;
+  margin-top: -2px;
+  scroll-margin-top: 92px; /* clears the sticky header when linked via #hero-capture */
+  background: var(--cream);
+  padding-top: clamp(48px, 6vw, 80px);
+  padding-bottom: clamp(40px, 6vw, 68px);
+}
+.hero-capture-section > .wrap { position: relative; z-index: 1; }
+.hero-capture {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 40px;
+  align-items: center;
+  border-radius: 20px;
+  padding: clamp(28px, 4vw, 48px);
+  color: var(--cream);
+  --glow-thickness: 1.5px;
+  --glow-speed: 4.6s; /* a hair slower than the eyebrow so they do not sync-flash */
+  /* dark walnut card floating on the cream section */
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgba(201, 161, 92, 0.16), transparent 60%),
+    linear-gradient(160deg, var(--espresso), #2f2318);
+  /* soft floating shadow on cream + faint inner ring under the rotating beam */
+  box-shadow: 0 26px 60px -28px rgba(26, 20, 16, 0.55), inset 0 0 0 1px rgba(231, 201, 143, 0.16);
+}
+.hero-capture-copy h2 { color: var(--cream); margin-bottom: .4rem; }
+.hero-capture-copy p { color: rgba(243, 236, 224, 0.82); margin: 0; max-width: 42ch; }
+.hero-capture-copy .eyebrow--pill { margin-bottom: 1rem; }
+.hero-capture-form { position: relative; z-index: 1; }
+/* inputs use the dark form scheme (the default .field styles already do this):
+   dark input bg, cream text, gold labels, bronze focus. No light overrides. */
+
+@media (max-width: 860px) {
+  .hero-capture { grid-template-columns: 1fr; gap: 24px; }
+}
 
 /* page hero (blog/about/subscribe) */
 .page-hero {
@@ -326,6 +899,18 @@ p { margin: 0 0 1rem; }
 .footer-nav { display: flex; gap: 24px; flex-wrap: wrap; }
 .footer-nav a { text-decoration: none; color: rgba(243, 236, 224, 0.78); font-size: 0.92rem; }
 .footer-nav a:hover { color: var(--gold); }
+.footer-social { display: flex; align-items: center; gap: 14px; }
+.footer-social-label {
+  font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(231, 201, 143, 0.62);
+}
+.footer-social-link {
+  display: inline-flex; align-items: center; justify-content: center;
+  color: rgba(243, 236, 224, 0.72);
+  transition: color .25s ease, transform .2s ease;
+}
+.footer-social-link svg { display: block; }
+.footer-social-link:hover { color: var(--gold); transform: translateY(-1px); }
 .footer-legal { font-size: 0.8rem; color: rgba(243, 236, 224, 0.45); margin: 0; }
 
 /* ---- service (pillar) pages ------------------------------------------- */
@@ -449,11 +1034,27 @@ p { margin: 0 0 1rem; }
 }
 @media (max-width: 768px) {
   body { font-size: 16px; }
-  .site-nav { gap: 16px; }
-  .site-nav a:not(.nav-cta) { display: none; }
+  .site-nav { display: none; }
+  .nav-toggle { display: inline-flex; }
+  .header-inner, .site-header.is-scrolled .header-inner { height: 68px; }
   .pillars, .card-grid { grid-template-columns: 1fr; }
   .section-head--row { flex-direction: column; align-items: flex-start; }
   .hero-actions .btn { flex: 1 1 auto; text-align: center; }
+
+  /* home hero on mobile: image sits behind, but the wash goes full-dark
+     top-to-bottom so the stacked copy is always legible over the photo */
+  .hero--home { padding: clamp(72px, 20vw, 108px) 0 clamp(64px, 16vw, 96px); }
+  .hero--home .hero-media img { object-position: 72% center; }
+  .hero--home::after {
+    background:
+      linear-gradient(180deg, rgba(26, 20, 16, 0.92) 0%, rgba(26, 20, 16, 0.78) 45%, rgba(26, 20, 16, 0.9) 100%);
+  }
+  .hero--home .hero-copy { max-width: 100%; }
+
+  /* marquee stays live on mobile, just a touch more compact */
+  .hero-marquee { margin-top: 2rem; max-width: 100%; }
+  .marquee-track { gap: 34px; }
+  .marquee-logo { height: 26px; max-width: 100px; }
 }
 
 /* ---------------------------------------------------------------------------
@@ -502,4 +1103,163 @@ p { margin: 0 0 1rem; }
 @media (max-width: 640px) {
   .inline-cta { padding: 22px 20px; }
   .inline-cta .btn { width: 100%; text-align: center; }
+}
+
+/* Lite YouTube facade — poster + play button; the real iframe is injected on
+   click by lite-yt.js. Keeps the article fast and dodges the origin/error-153
+   trap of eager embeds. */
+.lite-yt { background: #000; cursor: pointer; }
+.lite-yt-btn {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  padding: 0; margin: 0; border: 0; background: transparent; cursor: pointer;
+  display: block;
+}
+.lite-yt-poster { transition: transform .4s ease, filter .3s ease; }
+.lite-yt:hover .lite-yt-poster { transform: scale(1.03); filter: brightness(1.05); }
+.lite-yt::after {
+  content: ""; position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(180deg, rgba(26,20,16,0) 40%, rgba(26,20,16,0.35));
+  pointer-events: none;
+}
+.lite-yt-play {
+  position: absolute; z-index: 2; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 84px; height: 60px; border-radius: 16px;
+  background: linear-gradient(135deg, var(--bronze), var(--copper));
+  box-shadow: 0 12px 30px -8px rgba(184, 115, 51, 0.75);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.lite-yt-play::before {
+  content: ""; position: absolute; top: 50%; left: 52%; transform: translate(-50%, -50%);
+  border-style: solid; border-width: 12px 0 12px 20px;
+  border-color: transparent transparent transparent var(--ink);
+}
+.lite-yt:hover .lite-yt-play { transform: translate(-50%, -50%) scale(1.08); }
+.lite-yt-btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .lite-yt-poster, .lite-yt:hover .lite-yt-poster,
+  .lite-yt-play, .lite-yt:hover .lite-yt-play { transition: none; transform: none; }
+  .lite-yt:hover .lite-yt-play { transform: translate(-50%, -50%); }
+}
+
+/* =========================================================================
+   LEAD MODAL — one global, reusable capture pop-up (opened by [data-lead-modal]).
+   Premium walnut/bronze, matching the home capture card. Dark card, cream
+   title, dark inputs with bronze border, bronze primary CTA (gold beam).
+   ========================================================================= */
+.lead-modal {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.lead-modal[hidden] { display: none; }
+.lead-modal-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(10, 8, 6, 0.66);
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  opacity: 0; transition: opacity .28s ease;
+}
+.lead-modal.is-open .lead-modal-backdrop { opacity: 1; }
+.lead-modal-dialog {
+  position: relative; z-index: 1;
+  width: min(560px, 100%);
+  max-height: calc(100vh - 48px); overflow-y: auto;
+  background:
+    radial-gradient(120% 120% at 100% 0%, rgba(201, 161, 92, 0.16), transparent 58%),
+    var(--espresso);
+  border: 1px solid rgba(231, 201, 143, 0.24);
+  border-radius: 20px;
+  padding: clamp(26px, 4vw, 40px);
+  color: var(--cream);
+  box-shadow: 0 40px 100px -30px rgba(0, 0, 0, 0.8);
+  transform: translateY(16px) scale(0.98);
+  opacity: 0;
+  transition: transform .3s cubic-bezier(.4, 0, .2, 1), opacity .3s ease;
+}
+.lead-modal.is-open .lead-modal-dialog { transform: translateY(0) scale(1); opacity: 1; }
+.lead-modal .subscribe-copy { margin-bottom: 18px; }
+.lead-modal .subscribe-copy h2 { margin: .2rem 0 .5rem; }
+.lead-modal .subscribe-copy p { color: rgba(243, 236, 224, 0.78); }
+.lead-modal-form { display: flex; flex-direction: column; gap: 13px; }
+.lead-modal-close {
+  position: absolute; top: 12px; right: 14px;
+  width: 40px; height: 40px; line-height: 1;
+  font-size: 1.8rem; color: rgba(243, 236, 224, 0.7);
+  background: transparent; border: 0; cursor: pointer;
+  border-radius: 10px; transition: color .2s ease, background .2s ease;
+}
+.lead-modal-close:hover { color: var(--gold); background: rgba(201, 161, 92, 0.12); }
+
+/* link-arrow rendered as a button (pillar/card CTAs that open the modal) */
+.link-arrow--btn {
+  background: transparent; border: 0; padding: 0; cursor: pointer;
+  font-family: var(--font-body); font-size: 1rem;
+}
+
+/* ---- multi-step wizard ---- */
+.lm-progress { margin: 4px 0 6px; }
+.lm-progress[hidden] { display: none; }
+.lm-progress-count {
+  margin: 0 0 8px; font-size: 0.72rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--gold); font-weight: 500;
+}
+.lm-dots { display: flex; gap: 8px; }
+.lm-dot {
+  flex: 1 1 0; height: 3px; border-radius: 999px;
+  background: rgba(231, 201, 143, 0.18);
+  transition: background .3s ease;
+}
+.lm-dot.is-done { background: rgba(201, 161, 92, 0.55); }
+.lm-dot.is-active {
+  background: linear-gradient(90deg, var(--copper), var(--bronze), var(--gold));
+}
+
+/* one step at a time; each step gets a fresh slide+fade when it becomes active */
+.lm-steps { position: relative; }
+.lm-step[hidden] { display: none; }
+.lm-step { min-height: 78px; }
+.lm-step.lm-in-right { animation: lm-slide-right .28s cubic-bezier(.4, 0, .2, 1) both; }
+.lm-step.lm-in-left  { animation: lm-slide-left  .28s cubic-bezier(.4, 0, .2, 1) both; }
+@keyframes lm-slide-right {
+  from { opacity: 0; transform: translateX(18px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes lm-slide-left {
+  from { opacity: 0; transform: translateX(-18px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* nav row: Back on the left, Continue / Let's talk on the right */
+.lm-nav { display: flex; gap: 12px; align-items: center; margin-top: 4px; }
+.lm-nav .lm-back { flex: 0 0 auto; padding-left: 20px; padding-right: 20px; }
+.lm-nav .lm-next,
+.lm-nav .lm-submit { flex: 1 1 auto; }
+.lm-nav .btn[hidden] { display: none; }
+
+/* success panel */
+.lm-success { text-align: center; padding: 12px 4px 6px; }
+.lm-success[hidden] { display: none; }
+.lm-success-mark {
+  width: 56px; height: 56px; margin: 0 auto 14px; line-height: 56px;
+  font-size: 1.6rem; border-radius: 50%;
+  color: var(--ink);
+  background: linear-gradient(135deg, var(--bronze), var(--copper));
+  box-shadow: 0 10px 24px -12px rgba(184, 115, 51, 0.8);
+}
+.lm-success h3 { color: var(--cream); margin: 0 0 .3rem; }
+.lm-success p { color: rgba(243, 236, 224, 0.78); margin: 0; }
+
+@media (max-width: 640px) {
+  .lead-modal { padding: 0; align-items: flex-end; }
+  .lead-modal-dialog {
+    width: 100%; max-height: 92vh;
+    border-radius: 20px 20px 0 0;
+    transform: translateY(24px);
+  }
+  .lead-modal.is-open .lead-modal-dialog { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lead-modal-backdrop, .lead-modal-dialog, .lead-modal-close,
+  .lm-dot { transition: none; }
+  .lm-step.lm-in-right, .lm-step.lm-in-left { animation: none; }
 }

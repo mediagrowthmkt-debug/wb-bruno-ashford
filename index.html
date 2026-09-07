@@ -36,58 +36,263 @@
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="site-header">
+<header class="site-header" data-header>
   <div class="wrap header-inner">
     <a class="brand" href="index.html" aria-label="Bruno Ashford home">
-      <img src="assets/img/monogram-ba.png" alt="Bruno Ashford monogram" width="44" height="44" class="brand-mark" fetchpriority="high">
+      <span class="brand-mark-wrap" aria-hidden="true">
+        <img src="assets/img/monogram-ba.png" alt="" width="44" height="44" class="brand-mark" fetchpriority="high">
+      </span>
       <span class="brand-word">Bruno <span class="brand-accent">Ashford</span></span>
     </a>
     <nav class="site-nav" aria-label="Primary">
-      <a href="services/index.html">Services</a>
-      <a href="blog/index.html">Insights</a>
-      <a href="about/index.html">About</a>
-      <a class="nav-cta" href="subscribe/index.html">Subscribe</a>
+      <a href="blog/index.html" class="nav-link">Insights</a>
+      <a href="https://www.youtube.com/@brunoashford" class="nav-social" target="_blank" rel="noopener" aria-label="YouTube">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path fill="currentColor" d="M23.5 6.2a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.2C0 8.09 0 12 0 12s0 3.91.5 5.8a3.02 3.02 0 0 0 2.12 2.14c1.88.51 9.38.51 9.38.51s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.91 24 12 24 12s0-3.91-.5-5.8ZM9.6 15.57V8.43L15.82 12 9.6 15.57Z"/></svg>
+      </a>
+      <button type="button" class="nav-cta glow-border" data-lead-modal data-source="Popup: Header - Book a call">Book a call</button>
     </nav>
+    <button type="button" class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+    </button>
   </div>
 </header>
-<main id="main">
-  <section class="hero">
-    <div class="wrap hero-inner">
-      <p class="eyebrow eyebrow--gold">Consulting for the US &amp; UK</p>
-      <h1>AI consulting for<br><span class="hero-accent">business growth</span></h1>
-      <p class="hero-sub">Bruno Ashford partners with one company at a time to compound growth across sales, marketing, and operations, using AI where it actually moves the number.</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="services/ai-consulting/index.html">Explore AI consulting</a>
-        <a class="btn btn-ghost" href="subscribe/index.html">Get the weekly brief</a>
+<div class="mobile-drawer" id="mobile-drawer" data-drawer hidden>
+  <div class="mobile-drawer-backdrop" data-drawer-close></div>
+  <nav class="mobile-drawer-panel" aria-label="Mobile">
+    <div class="mobile-drawer-head">
+      <span class="brand-word">Bruno <span class="brand-accent">Ashford</span></span>
+      <button type="button" class="drawer-close" aria-label="Close menu" data-drawer-close>&times;</button>
+    </div>
+    <a href="blog/index.html" class="drawer-link">Insights</a>
+    <button type="button" class="btn btn-primary drawer-cta" data-lead-modal data-source="Popup: Mobile drawer - Book a call">Book a call</button>
+    <a href="https://www.youtube.com/@brunoashford" class="drawer-social" target="_blank" rel="noopener" aria-label="YouTube">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path fill="currentColor" d="M23.5 6.2a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.2C0 8.09 0 12 0 12s0 3.91.5 5.8a3.02 3.02 0 0 0 2.12 2.14c1.88.51 9.38.51 9.38.51s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.91 24 12 24 12s0-3.91-.5-5.8ZM9.6 15.57V8.43L15.82 12 9.6 15.57Z"/></svg>
+      <span>YouTube</span>
+    </a>
+  </nav>
+</div>
+<div class="lead-modal" id="lead-modal" data-lead-modal-root hidden>
+  <div class="lead-modal-backdrop" data-modal-close></div>
+  <div class="lead-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="lead-modal-title" aria-describedby="lead-modal-sub">
+    <button type="button" class="lead-modal-close" aria-label="Close" data-modal-close>&times;</button>
+    <div class="subscribe-copy">
+      <p class="eyebrow">Book a call</p>
+      <h2 id="lead-modal-title">Let's talk about your business.</h2>
+      <p id="lead-modal-sub">A few quick questions. I'll come back personally, one company at a time, US and UK.</p>
+    </div>
+
+    <!-- progress -->
+    <div class="lm-progress" data-lm-progress>
+      <p class="lm-progress-count" data-lm-count>Step 1 of 5</p>
+      <div class="lm-dots" aria-hidden="true">
+        <span class="lm-dot" data-dot="0"></span>
+        <span class="lm-dot" data-dot="1"></span>
+        <span class="lm-dot" data-dot="2"></span>
+        <span class="lm-dot" data-dot="3"></span>
+        <span class="lm-dot" data-dot="4"></span>
       </div>
-      <p class="hero-proof">Sales &middot; AI for business &middot; Marketing &amp; paid traffic &middot; Process</p>
+    </div>
+
+    <!-- Live: posts to the secure server-side proxy (GHL CRM). Token stays server-side.
+         Multi-step: only the UI changed; the final POST is identical. -->
+    <form class="subscribe-form lead-modal-form" data-integration="ghl-live" data-lead-modal-form novalidate>
+      <input type="hidden" name="source" value="Popup: Lead modal">
+      <input type="hidden" name="interest" value="">
+      <input type="text" class="hp-field" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <div class="lm-steps">
+        <div class="lm-step" data-step="0">
+          <div class="field">
+            <label for="lm-name">First name</label>
+            <input type="text" id="lm-name" name="name" autocomplete="given-name" placeholder="Jordan" enterkeyhint="next">
+          </div>
+        </div>
+        <div class="lm-step" data-step="1" hidden>
+          <div class="field">
+            <label for="lm-email">Work email</label>
+            <input type="email" id="lm-email" name="email" autocomplete="email" placeholder="you@company.com" required enterkeyhint="next">
+          </div>
+        </div>
+        <div class="lm-step" data-step="2" hidden>
+          <div class="field">
+            <label for="lm-phone">Phone <span class="field-opt">(optional)</span></label>
+            <input type="tel" id="lm-phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="+1 555 123 4567" enterkeyhint="next">
+          </div>
+        </div>
+        <div class="lm-step" data-step="3" hidden>
+          <div class="field">
+            <label for="lm-interest">What are you looking for?</label>
+            <select id="lm-interest" name="interest_choice">
+          <option value="implement">Implement AI in my company</option>
+          <option value="course">The AI Agents Course</option>
+          <option value="personal">Personal AI consulting</option>
+          <option value="exploring">Just exploring / learning more</option>
+            </select>
+          </div>
+        </div>
+        <div class="lm-step" data-step="4" hidden>
+          <div class="field">
+            <label for="lm-detail">Anything else? <span class="field-opt">(optional)</span></label>
+            <textarea id="lm-detail" name="detail" rows="3" placeholder="A line about your company or what you want to solve." enterkeyhint="send"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <p class="form-note" role="status" aria-live="polite"></p>
+
+      <div class="lm-nav">
+        <button type="button" class="btn btn-ghost lm-back" data-lm-back hidden>Back</button>
+        <button type="button" class="btn btn-primary lm-next" data-lm-next>Continue</button>
+        <button type="submit" class="btn btn-primary lm-submit" data-lm-submit hidden>Let's talk</button>
+      </div>
+      <p class="form-fine">A real conversation about your business, not a sales call.</p>
+
+      <!-- success panel (shown after a successful POST) -->
+      <div class="lm-success" data-lm-success hidden>
+        <p class="lm-success-mark" aria-hidden="true">&#10003;</p>
+        <h3>You're in.</h3>
+        <p>Thanks. I'll come back to you personally, one company at a time.</p>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="assets/js/header.js" defer></script>
+<script src="assets/js/lead-modal.js" defer></script>
+<main id="main">
+  <section class="hero hero--home">
+    <picture class="hero-media">
+      <source type="image/webp" srcset="assets/img/hero-bruno-ashford.webp">
+      <img src="assets/img/hero-bruno-ashford.png" alt="Bruno Ashford, AI strategist for business owners" width="1760" height="982" fetchpriority="high">
+    </picture>
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <p class="eyebrow eyebrow--gold eyebrow--pill glow-border"><span class="glow-tick" aria-hidden="true"></span>AI Strategist for Business Owners</p>
+        <h1>You were not born<br>to be <span class="hero-accent">efficient.</span></h1>
+        <p class="hero-sub">You were born to lead people, not to push paper. <span id="hero-highlight" class="hero-highlight">Let AI do the machine work</span>, so your time goes to strategy, your team, and the decisions only you can make.</p>
+        <div class="hero-actions">
+          <button type="button" class="btn btn-primary" data-lead-modal data-source="Popup: Home Hero - Book a strategy call">Book a strategy call</button>
+          <a class="btn btn-ghost" href="services/ai-consulting/index.html">See how it works</a>
+        </div>
+        <div class="hero-marquee" role="group" aria-label="The AI stack Bruno Ashford builds with">
+          <p class="marquee-label">The AI stack I build with</p>
+          <div class="marquee-viewport">
+            <ul class="marquee-track">
+          <li class="marquee-item">
+            <img class="marquee-logo" src="assets/img/logos/openai-cream.png" alt="OpenAI" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item">
+            <img class="marquee-logo" src="assets/img/logos/claude-cream.png" alt="Claude" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item">
+            <img class="marquee-logo" src="assets/img/logos/gemini-cream.png" alt="Gemini" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item">
+            <img class="marquee-logo" src="assets/img/logos/hermes-cream.png" alt="Hermes" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item">
+            <img class="marquee-logo" src="assets/img/logos/openclaw-cream.png" alt="OpenClaw" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item">
+            <img class="marquee-logo" src="assets/img/logos/github-cream.png" alt="GitHub" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item">
+            <img class="marquee-logo" src="assets/img/logos/vercel-cream.png" alt="Vercel" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item">
+            <img class="marquee-logo" src="assets/img/logos/manus-cream.png" alt="Manus" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item">
+            <img class="marquee-logo" src="assets/img/logos/cursor-cream.png" alt="Cursor" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item">
+            <img class="marquee-logo" src="assets/img/logos/deepseek-cream.png" alt="DeepSeek" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item">
+            <img class="marquee-logo" src="assets/img/logos/nvidia-cream.png" alt="Nvidia" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item" aria-hidden="true">
+            <img class="marquee-logo" src="assets/img/logos/openai-cream.png" alt="OpenAI" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item" aria-hidden="true">
+            <img class="marquee-logo" src="assets/img/logos/claude-cream.png" alt="Claude" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item" aria-hidden="true">
+            <img class="marquee-logo" src="assets/img/logos/gemini-cream.png" alt="Gemini" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item" aria-hidden="true">
+            <img class="marquee-logo" src="assets/img/logos/hermes-cream.png" alt="Hermes" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item" aria-hidden="true">
+            <img class="marquee-logo" src="assets/img/logos/openclaw-cream.png" alt="OpenClaw" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item" aria-hidden="true">
+            <img class="marquee-logo" src="assets/img/logos/github-cream.png" alt="GitHub" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item" aria-hidden="true">
+            <img class="marquee-logo" src="assets/img/logos/vercel-cream.png" alt="Vercel" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item" aria-hidden="true">
+            <img class="marquee-logo" src="assets/img/logos/manus-cream.png" alt="Manus" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item" aria-hidden="true">
+            <img class="marquee-logo" src="assets/img/logos/cursor-cream.png" alt="Cursor" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item" aria-hidden="true">
+            <img class="marquee-logo" src="assets/img/logos/deepseek-cream.png" alt="DeepSeek" loading="lazy" width="120" height="34">
+          </li>
+          <li class="marquee-item" aria-hidden="true">
+            <img class="marquee-logo" src="assets/img/logos/nvidia-cream.png" alt="Nvidia" loading="lazy" width="120" height="34">
+          </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section hero-capture-section" id="hero-capture" aria-labelledby="hero-capture-h">
+    <div class="wrap">
+      <div class="hero-capture glow-border">
+        <div class="hero-capture-copy">
+          <p class="eyebrow eyebrow--gold eyebrow--pill glow-border"><span class="glow-tick" aria-hidden="true"></span>Book a strategy call</p>
+          <h2 id="hero-capture-h">Want AI working inside your business?</h2>
+          <p>Tell me about your business and let's find the machine work AI can take off your plate. One company at a time, US and UK.</p>
+        </div>
+        <!-- Unified capture: opens the same step-by-step wizard (#lead-modal). -->
+        <div class="hero-capture-action">
+          <button type="button" class="btn btn-primary" data-lead-modal data-interest="exploring" data-source="Home Hero: Book a strategy call">Book a strategy call</button>
+          <p class="form-fine">A real conversation about your business, not a sales call.</p>
+        </div>
+      </div>
     </div>
   </section>
 
   <section class="section pillars-section">
     <div class="wrap">
       <div class="section-head">
-        <p class="eyebrow">Where we create leverage</p>
-        <h2>Four levers. One growth engine.</h2>
+        <p class="eyebrow">Services</p>
+        <h2>Three ways to put AI to work in your business.</h2>
       </div>
       <div class="pillars">
         <article class="pillar">
-      <p class="eyebrow">Sales</p>
-      <h3>Sell More, Predictably</h3>
-      <p>Build a commercial engine that turns pipeline into signed revenue with a repeatable, data-backed sales process.</p>
-      <p><a class="link-arrow" href="services/sales-consulting/index.html">Explore sales consulting &rarr;</a></p>
+      <p class="eyebrow pillar-num">01</p>
+      <h3>The Complete AI Agents Course</h3>
+      <p>Learn to build the AI agents that take over your machine work, step by step. Go from doing everything yourself to directing a team of agents.</p>
+      <p><button type="button" class="link-arrow link-arrow--btn" data-lead-modal data-interest="course" data-source="Popup: Services card - AI Agents Course">Get on the list &rarr;</button></p>
     </article>
 <article class="pillar">
-      <p class="eyebrow">AI for Business</p>
-      <h3>AI That Pays for Itself</h3>
-      <p>Deploy AI where it moves the number: faster sales cycles, leaner operations, and decisions grounded in data.</p>
-      <p><a class="link-arrow" href="services/ai-consulting/index.html">Explore AI consulting &rarr;</a></p>
+      <p class="eyebrow pillar-num">02</p>
+      <h3>AI Implementation for Your Company and Team</h3>
+      <p>I install AI across your business and train your people to use it, so the repetitive work leaves and your team focuses on what only humans can do.</p>
+      <p><button type="button" class="link-arrow link-arrow--btn" data-lead-modal data-interest="implement" data-source="Popup: Services card - Implementation">Book a call &rarr;</button></p>
     </article>
 <article class="pillar">
-      <p class="eyebrow">Marketing & Paid Traffic</p>
-      <h3>Traffic That Converts</h3>
-      <p>Google Ads and paid media engineered around unit economics, so every dollar in returns growth you can measure.</p>
-      <p><a class="link-arrow" href="services/marketing-consulting/index.html">Explore marketing consulting &rarr;</a></p>
+      <p class="eyebrow pillar-num">03</p>
+      <h3>Personal AI Consulting</h3>
+      <p>One on one, I find the machine work hiding in your day and hand it to AI, so your time goes back to strategy, your people, and your life.</p>
+      <p><button type="button" class="link-arrow link-arrow--btn" data-lead-modal data-interest="personal" data-source="Popup: Services card - Personal AI Consulting">Book a strategy call &rarr;</button></p>
     </article>
       </div>
     </div>
@@ -105,7 +310,7 @@
       <div class="card-grid">
         <article class="card">
   <a class="card-link" href="blog/how-companies-use-ai-in-2026.html">
-    <div class="card-cover" style="background-image:url(assets/img/covers/cover-how-companies-use-ai.webp)"></div>
+    <div class="card-cover" style="background-image:url(assets/img/covers/yt-edmAECbA7OQ.webp)"></div>
     <div class="card-body">
       <div class="card-tags"><span class="tag">How Companies Use AI</span><span class="tag">AI Agents</span></div>
       <h3>How Companies Use AI in 2026: From Chat to Agents</h3>
@@ -116,7 +321,7 @@
 </article>
 <article class="card">
   <a class="card-link" href="blog/ai-agents-for-business-operating-system.html">
-    <div class="card-cover" style="background-image:url(assets/img/covers/cover-ai-operating-system.webp)"></div>
+    <div class="card-cover" style="background-image:url(assets/img/covers/yt-_L9s1d0FS2I.webp)"></div>
     <div class="card-body">
       <div class="card-tags"><span class="tag">AI for Business</span><span class="tag">AI Agents</span></div>
       <h3>AI Operating System for Business: Watch One Run a Company</h3>
@@ -127,7 +332,7 @@
 </article>
 <article class="card">
   <a class="card-link" href="blog/ai-automation-agency-how-it-works.html">
-    <div class="card-cover" style="background-image:url(assets/img/covers/cover-ai-automation-agency.webp)"></div>
+    <div class="card-cover" style="background-image:url(assets/img/covers/yt-_L9s1d0FS2I.webp)"></div>
     <div class="card-body">
       <div class="card-tags"><span class="tag">AI Automation Agency</span><span class="tag">AI Marketing Agency</span></div>
       <h3>AI Automation Agency: How the Model Actually Works</h3>
@@ -142,33 +347,22 @@
 
   <section class="section subscribe-section">
     <div class="wrap">
-      <section class="subscribe-card " aria-labelledby="sub-h">
+      <section class="subscribe-card  cta-card" aria-labelledby="sub-h">
   <div class="subscribe-copy">
-    <p class="eyebrow">The Ashford Brief</p>
-    <h2 id="sub-h">Get the growth playbook in your inbox</h2>
-    <p>One sharp idea each week on sales, AI, and paid traffic. Written for founders and executives who want compounding growth, not noise.</p>
+    <p class="eyebrow">Book a call</p>
+    <h2 id="sub-h">See what AI could do inside your business.</h2>
+    <p>Tell me about your company and I&#x27;ll show you where AI fits, and what it can take off your plate. One company at a time, US and UK.</p>
   </div>
-  <!-- Live: posts to the secure server-side proxy (GHL CRM). Token stays server-side. -->
-  <form class="subscribe-form" data-integration="ghl-live" novalidate>
-    <input type="hidden" name="source" value="Newsletter: The Ashford Brief">
-    <input type="text" class="hp-field" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true">
-    <div class="field">
-      <label for="sub-name">First name</label>
-      <input type="text" id="sub-name" name="name" autocomplete="given-name" placeholder="Jordan">
-    </div>
-    <div class="field">
-      <label for="sub-email">Work email</label>
-      <input type="email" id="sub-email" name="email" autocomplete="email" placeholder="you@company.com" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Subscribe</button>
-    <p class="form-note" role="status" aria-live="polite"></p>
-    <p class="form-fine">No spam. Unsubscribe anytime.</p>
-  </form>
+  <div class="cta-card-action">
+    <button type="button" class="btn btn-primary" data-lead-modal data-interest="exploring" data-source="Site CTA: See what AI could do">Let&#x27;s talk</button>
+    <p class="form-fine">A real conversation about your business, not a sales call.</p>
+  </div>
 </section>
-<script src="assets/js/subscribe.js" defer></script>
     </div>
   </section>
 </main>
+<script src="assets/js/rough-notation.iife.js" defer></script>
+<script src="assets/js/hero-highlight.js" defer></script>
 <footer class="site-footer">
   <div class="wrap footer-inner">
     <div class="footer-brand">
@@ -183,6 +377,12 @@
       <a href="about/index.html">About</a>
       <a href="subscribe/index.html">Newsletter</a>
     </nav>
+    <div class="footer-social">
+      <span class="footer-social-label">Follow</span>
+      <a href="https://www.youtube.com/@brunoashford" class="footer-social-link" target="_blank" rel="noopener" aria-label="YouTube">
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M23.5 6.2a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.2C0 8.09 0 12 0 12s0 3.91.5 5.8a3.02 3.02 0 0 0 2.12 2.14c1.88.51 9.38.51 9.38.51s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.91 24 12 24 12s0-3.91-.5-5.8ZM9.6 15.57V8.43L15.82 12 9.6 15.57Z"/></svg>
+      </a>
+    </div>
     <p class="footer-legal">&copy; 2026 Bruno Ashford. Consulting for the United States &amp; United Kingdom.</p>
   </div>
 </footer>
