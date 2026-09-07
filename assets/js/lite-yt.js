@@ -9,6 +9,13 @@
   function activate(box) {
     var id = box.getAttribute("data-yt");
     if (!id || box.dataset.loaded === "1") return;
+    // Preview local (file://) nao tem origem valida -> o player do YouTube da
+    // "erro 153". Nesse caso abre o video no YouTube em vez de injetar um iframe
+    // quebrado. Em produção (http/https) segue injetando o iframe normalmente.
+    if (location.protocol === "file:") {
+      window.open("https://www.youtube.com/watch?v=" + encodeURIComponent(id), "_blank", "noopener");
+      return;
+    }
     box.dataset.loaded = "1";
 
     var iframe = document.createElement("iframe");
