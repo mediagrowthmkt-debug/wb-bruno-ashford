@@ -377,6 +377,16 @@ p { margin: 0 0 1rem; }
 }
 .hero-inner { max-width: 860px; }
 .hero h1 { color: var(--cream); }
+.hero-hook { display: block; }
+.hero-brandline {
+  display: block;
+  margin-top: 1rem;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  color: rgba(243, 236, 224, 0.7);
+}
 .hero-accent {
   background: linear-gradient(120deg, var(--gold), var(--bronze), var(--copper));
   -webkit-background-clip: text; background-clip: text; color: transparent;
