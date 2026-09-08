@@ -1,0 +1,20 @@
+{
+  "schema": "ceu-v1",
+  "kind": "design_html_png",
+  "agent": "kevin",
+  "cliente": "brunoashford",
+  "descricao": "Cover hero de blog 16:9 (peca de design branded, HTML->PNG, sem foto/Higgsfield) — Post 'How Companies Use AI in 2026: From Chat to Agents'. Fundo madeira + monograma BA oficial + filete bronze + eyebrow 'HOW COMPANIES USE AI' + titulo serifado. Motivo geometrico: ciclo/fluxo (loop) em bronze, representa a transicao chat -> agentes que rodam a empresa.",
+  "post": "How Companies Use AI in 2026: From Chat to Agents",
+  "source": {
+    "engine": "html_chrome_headless",
+    "generator": "identidade-visual/_render/gen_cover_how-companies-use-ai.py",
+    "assets": {
+      "monograma": "identidade-visual/logos/bruno-ashford-monograma-bronze-original-transparente.png",
+      "fontes": ["Cormorant Garamond (display)", "Jost (apoio)"],
+      "paleta": ["#2B211A","#3E2F23","#1A1410","#B07C4A","#C9A15C","#B87333","#E7C98F","#F3ECE0"]
+    },
+    "motif": "loop"
+  },
+  "render_command": "python3 clientes/31_bruno_ashford/identidade-visual/_render/gen_cover_how-companies-use-ai.py  # HTML->Chrome headless, custo zero; depois magick resize 1600x900 + -colors 256 + cwebp -q 88",
+  "outputs": ["cover-how-companies-use-ai.png", "cover-how-companies-use-ai.webp"]
+}
