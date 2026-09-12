@@ -420,5 +420,21 @@
   <span class="mail-fab-pulse" aria-hidden="true"></span>
   <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M4 7.5l8 5.5 8-5.5"/></svg>
 </a>
+<script>(function(){try{
+ /* Remember scroll position per page for this browser session: returning to a
+    page (switching tabs, resume redirect) lands you exactly where you were.
+    Cleared when the browser closes. Skips when the URL carries an #anchor. */
+ var K='sy:'+location.pathname;
+ if('scrollRestoration' in history)history.scrollRestoration='manual';
+ if(!location.hash){
+   var y=sessionStorage.getItem(K);
+   if(y!==null){var n=parseInt(y,10)||0,go=function(){window.scrollTo(0,n);};
+     go();window.addEventListener('load',function(){go();setTimeout(go,80);});}
+ }
+ var t=null,save=function(){try{sessionStorage.setItem(K,String(window.scrollY||window.pageYOffset||0));}catch(e){}};
+ window.addEventListener('scroll',function(){if(t)return;t=requestAnimationFrame(function(){t=null;save();});},{passive:true});
+ window.addEventListener('pagehide',save);
+ document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')save();});
+}catch(e){}})();</script>
 </body>
 </html>
