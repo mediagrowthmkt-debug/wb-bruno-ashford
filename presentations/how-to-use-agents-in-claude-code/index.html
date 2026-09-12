@@ -185,6 +185,13 @@
  /* remember the slide within this browser session (survives leaving and re-
     entering the Presentations tab; resets when the browser is closed) */
  var SKEY='deck-slide:'+location.pathname;
+ /* mark THIS presentation as the last one opened this session, so returning to
+    the Presentations section resumes straight into it (see the index page). */
+ try{sessionStorage.setItem('pres-last',location.pathname);}catch(e){}
+ /* clicking any link back to the Presentations list (breadcrumb, header, footer)
+    is an explicit "show me the list" - forget the resume so it doesn't bounce. */
+ [].slice.call(document.querySelectorAll('a[href$="presentations/"]')).forEach(function(a){
+   a.addEventListener('click',function(){try{sessionStorage.removeItem('pres-last');}catch(e){}});});
  function go(k){
   k=Math.max(0,Math.min(n-1,k));
   slides.forEach(function(s,j){s.classList.remove('is-active','is-prev');if(j===k)s.classList.add('is-active');else if(j<k)s.classList.add('is-prev');});
