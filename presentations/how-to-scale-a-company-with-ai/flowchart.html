@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Scale a Company with AI: Interactive Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+ *{margin:0;padding:0;box-sizing:border-box}
+ :root{--walnut:#120b06;--cream:#F3ECE0;--bronze:#C9A15C;--gold:#E7C98F;--muted:#b6a48c;--card:#1d140b;--line:rgba(201,161,92,.45);--edge:#8a6a34}
+ html,body{height:100%}
+ body{font-family:'Jost',sans-serif;background:var(--walnut);color:var(--cream);overflow:hidden;-webkit-font-smoothing:antialiased}
+ .bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 50% -4%, #2a1a0a 0%, var(--walnut) 55%),linear-gradient(rgba(201,161,92,.045) 1px, transparent 1px) 0 0/46px 46px,linear-gradient(90deg, rgba(201,161,92,.045) 1px, transparent 1px) 0 0/46px 46px}
+ header{position:fixed;top:0;left:0;width:100%;z-index:20;padding:15px 26px;display:flex;align-items:center;gap:16px;background:linear-gradient(180deg, rgba(18,11,6,.95), rgba(18,11,6,0));backdrop-filter:blur(4px)}
+ header .brand{display:flex;align-items:center;gap:12px}header .brand img{height:32px}
+ header .tt{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;line-height:1}
+ header .tt small{display:block;font-family:'Jost';font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--bronze);font-weight:500;margin-bottom:2px}
+ .legend{margin-left:auto;display:flex;gap:14px;align-items:center;font-size:11px;color:var(--muted)}
+ .legend b{display:inline-flex;align-items:center;gap:6px;font-weight:400}
+ .lg{width:20px;height:13px;border:1.5px solid var(--bronze);background:var(--card)}
+ .lg.term{border-radius:9px}.lg.proc{border-radius:4px}.lg.dec{width:14px;height:14px;transform:rotate(45deg)}
+ .hint{font-size:11px;color:var(--gold);opacity:.8}
+ #vp{position:fixed;inset:0;z-index:1;cursor:grab;overflow:hidden}#vp.grabbing{cursor:grabbing}
+ #canvas{position:absolute;left:0;top:0;transform-origin:0 0}
+ svg.edges{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+ .edge{fill:none;stroke:var(--edge);stroke-width:2.2}
+ .edge.flow{stroke-dasharray:9 8;animation:dash 1.1s linear infinite}
+ @keyframes dash{to{stroke-dashoffset:-34}}
+ .elabel{fill:var(--gold);font-family:'Jost';font-size:13px;font-weight:500}.elabel-bg{fill:var(--walnut)}
+ .phase{position:absolute;left:0;border-top:1px dashed rgba(201,161,92,.22);z-index:1}
+ .phase .pl{position:absolute;left:20px;top:12px;font-family:'Cormorant Garamond',serif;font-size:30px;color:rgba(201,161,92,.4);font-weight:600}
+ .phase .pn{position:absolute;left:20px;top:2px;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(201,161,92,.5);font-weight:600}
+ .node{position:absolute;transform:translate(-50%,-50%);cursor:pointer;transition:transform .15s;z-index:3}
+ .node:hover{transform:translate(-50%,-50%) scale(1.04);z-index:5}
+ .node .inner{background:var(--card);border:1.6px solid var(--line);box-shadow:0 14px 30px rgba(0,0,0,.5);display:flex;flex-direction:column;justify-content:center;padding:13px 17px;position:relative}
+ .node:hover .inner{border-color:var(--gold);box-shadow:0 0 0 4px rgba(201,161,92,.12),0 16px 38px rgba(0,0,0,.55)}
+ .node.active{z-index:6}
+ .node.active .inner{border-color:var(--gold)!important;animation:glowPulse 2.1s ease-in-out infinite}
+ @keyframes glowPulse{0%,100%{box-shadow:0 0 0 3px rgba(231,201,143,.35),0 0 22px 3px rgba(201,161,92,.45),0 16px 38px rgba(0,0,0,.55)}50%{box-shadow:0 0 0 4px rgba(231,201,143,.6),0 0 44px 11px rgba(201,161,92,.72),0 16px 38px rgba(0,0,0,.55)}}
+ .node .step{position:absolute;top:-11px;left:-11px;width:28px;height:28px;border-radius:50%;background:linear-gradient(180deg,var(--gold),var(--bronze));color:var(--walnut);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(0,0,0,.5)}
+ .node .nt{font-size:16px;font-weight:600;color:var(--cream);line-height:1.15}
+ .node .nd{font-size:12px;color:var(--muted);font-weight:300;margin-top:3px;line-height:1.25}
+ .node .more{position:absolute;bottom:7px;right:11px;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--bronze);opacity:.7}
+ .node.process .inner{width:248px;min-height:84px;border-radius:14px}
+ .node.area .inner{width:206px;min-height:60px;border-radius:12px;border-color:rgba(201,161,92,.35)}
+ .node.area .nt{font-size:15px}
+ .node.terminal .inner{width:224px;min-height:60px;border-radius:32px;align-items:center;text-align:center;background:linear-gradient(160deg,#2a1c0b,#1a1108)}
+ .node.terminal.gold .inner{background:linear-gradient(160deg,#4a3512,#2a1c0b);border-color:var(--gold)}
+ .node.terminal .nt{font-family:'Cormorant Garamond',serif;font-size:23px}
+ .node.decision .inner{width:180px;height:180px;transform:rotate(45deg);border-radius:16px;align-items:center;text-align:center;padding:0}
+ .node.decision .txt{transform:rotate(-45deg);width:146px}.node.decision .nt{font-size:15px}
+ .node.decision .step{transform:rotate(-45deg);top:4px;left:4px}.node.decision .more{transform:rotate(-45deg);bottom:24px;right:24px}
+ #drawer{position:fixed;top:0;right:0;height:100%;width:430px;max-width:92vw;z-index:30;background:linear-gradient(180deg,#1d140b,#14100a);border-left:1px solid var(--line);box-shadow:-20px 0 60px rgba(0,0,0,.6);transform:translateX(100%);transition:transform .32s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+ #drawer.open{transform:translateX(0)}
+ .dw-head{padding:24px 26px 16px;border-bottom:1px solid rgba(201,161,92,.2);position:relative}
+ .dw-kick{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--bronze);font-weight:600}
+ .dw-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:var(--cream);line-height:1.05;margin-top:8px}
+ .dw-close{position:absolute;top:18px;right:22px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--cream);font-size:18px;cursor:pointer}
+ .dw-close:hover{background:rgba(201,161,92,.15)}
+ .dw-body{padding:0 0 40px;overflow-y:auto;flex:1}
+ .dw-hero{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;border-bottom:1px solid rgba(201,161,92,.2)}
+ .dw-cap{font-size:11px;color:var(--muted);padding:7px 26px 0;font-style:italic}
+ .dw-in{padding:18px 26px 0}
+ .dw-desc{font-size:16px;line-height:1.55;color:#e2d6c5;font-weight:300}
+ .dw-video{width:100%;aspect-ratio:16/9;border:0;display:block;border-radius:12px;margin-top:11px;background:#000}
+ .dw-vlabel{font-size:12.5px;color:var(--gold);margin-top:8px;display:flex;align-items:center;gap:7px}
+ .dw-vlabel svg{width:16px;height:16px;fill:#ff3b30}
+ .dw-sec{margin-top:22px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--bronze);font-weight:600}
+ .dw-steps{margin-top:11px;counter-reset:s;display:flex;flex-direction:column;gap:9px}
+ .dw-steps div{font-size:14.5px;color:#d9ccb8;font-weight:300;padding-left:34px;position:relative;line-height:1.4}
+ .dw-steps div:before{counter-increment:s;content:counter(s);position:absolute;left:0;top:-1px;width:23px;height:23px;border-radius:50%;background:rgba(201,161,92,.14);border:1px solid var(--bronze);color:var(--gold);font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:600}
+ .dw-ex{margin-top:11px;display:flex;flex-direction:column;gap:9px}
+ .dw-ex div{font-size:14px;color:#e2d6c5;font-weight:300;padding:9px 13px 9px 30px;position:relative;line-height:1.4;font-style:italic;background:rgba(201,161,92,.06);border-radius:8px}
+ .dw-ex div:before{content:"\201C";position:absolute;left:10px;top:6px;color:var(--bronze);font-family:'Cormorant Garamond',serif;font-size:24px}
+ .dw-links{margin-top:11px;display:flex;flex-direction:column;gap:9px}
+ .dw-link{display:flex;gap:9px;padding:11px 14px;border-radius:10px;background:rgba(201,161,92,.09);border-left:3px solid var(--bronze);color:var(--gold);text-decoration:none;font-size:13.5px}
+ .dw-link:hover{background:rgba(201,161,92,.16)}
+ .dw-done{margin:20px 26px 0;padding:13px 16px;border-radius:10px;background:rgba(120,170,90,.1);border-left:3px solid #7bab5a;font-size:14px;color:#cfe0be}
+ .dw-done b{color:#9ecb7e;font-weight:600}
+ .zoom{position:fixed;bottom:20px;left:20px;z-index:20;display:flex;gap:8px}
+ .zoom button{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:rgba(29,20,11,.9);color:var(--cream);font-size:19px;cursor:pointer}
+ .zoom button:hover{border-color:var(--gold);color:var(--gold)}
+ .foot{position:fixed;bottom:22px;right:22px;z-index:20;font-size:11px;letter-spacing:2px;color:var(--gold);opacity:.7}
+</style></head>
+<body>
+<div class="bg"></div>
+<header><div class="brand"><img src="logo-bronze.png" alt="Bruno Ashford"><div class="tt"><small>Bruno Ashford · Interactive Playbook</small>How to Scale a Company with AI</div></div>
+<div class="legend"><b><span class="lg term"></span>Start / End</b><b><span class="lg proc"></span>Step</b><b><span class="lg dec"></span>Decision</b><span class="hint">Click a node · two-finger scroll or arrow keys to move · pinch or +/- to zoom</span></div></header>
+<div id="vp"><div id="canvas"><svg class="edges" id="edges"><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#b0863f"></path></marker></defs></svg></div></div>
+<aside id="drawer"><div class="dw-head"><div class="dw-kick" id="dwKick"></div><div class="dw-title" id="dwTitle"></div><button class="dw-close" onclick="closeDrawer()">&times;</button></div><div class="dw-body" id="dwBody"></div></aside>
+<div class="zoom"><button onclick="zoom(1.15)">+</button><button onclick="zoom(.87)">&minus;</button><button onclick="resetView()">&#8862;</button></div>
+<div class="foot">brunoashford.com</div>
+<script>
+const CANVAS_W=1520, CANVAS_H=3060;
+const PHASES=[{y:20,label:'01',name:'Foundation'},{y:520,label:'02',name:'People'},{y:880,label:'03',name:'Find what to automate'},{y:1340,label:'04',name:'Build'},{y:1930,label:'05',name:'Open'},{y:2300,label:'06',name:'Manage & Scale'}];
+const NODES=[
+ {id:'start',type:'terminal',x:760,y:80,title:'You + Claude Code',
+  desc:'Every scale story starts with one person and Claude Code. No dev team, no big budget, just you describing what your company needs.',
+  steps:['Install Claude Code on your machine','Describe your company in plain English','Let Claude map what a system would need'],
+  examples:['A founder opens Claude Code and says: build me a dashboard to track my leads','No engineers involved, just a plain-English brief'],
+  img:'assets/img/start.jpg',cap:'One founder, one terminal, no dev team.',
+  video:'eMUxtepjp4g',videoTitle:'How to Set Up AI Agents on Your Computer (No Code, Step by Step)',
+  resources:[{t:'Claude Code (official)',u:'https://claude.com/product/claude-code'},{t:'Read: Start with Claude Code (Bruno Ashford)',u:'#'}],
+  done:'You can talk to Claude Code about your business.'},
+
+ {id:'build',type:'process',step:1,x:760,y:250,title:'Build the platform',
+  desc:'Claude Code builds your company its own internal platform: dashboards, automations and agents in one place. Your own OS, not rented software.',
+  steps:['Ask Claude to scaffold your internal platform','Start with one dashboard and one workflow','Keep the code in a repo you own'],
+  examples:['An internal dashboard for jobs, clients and tasks','An automation that turns new leads into follow-ups'],
+  img:'assets/img/build.jpg',cap:'Your own platform, built for how you work.',
+  video:'_L9s1d0FS2I',videoTitle:'I Built the AI System That Runs My Entire Company',
+  resources:[{t:'Example: the MediaGrowth system',u:'#'},{t:'Read: Your company OS (Bruno Ashford)',u:'#'}],
+  done:'You have a running platform you own.'},
+
+ {id:'deploy',type:'process',step:2,x:760,y:410,title:'Deploy on your own server',
+  desc:'Put the platform on your own secure server (a VPS) so it runs 24/7 and the data stays yours.',
+  steps:['Get a VPS','Have Claude deploy the platform there','Lock down access and backups'],
+  examples:['Deploy to a low-cost VPS that runs 24/7','Your data lives on your server, not a vendor’s'],
+  img:'assets/img/deploy.jpg',cap:'Runs 24/7 on infrastructure you control.',
+  resources:[{t:'DigitalOcean Droplets',u:'https://www.digitalocean.com/products/droplets'},{t:'Hetzner Cloud',u:'https://www.hetzner.com/cloud'}],
+  done:'The platform is live on your own server.'},
+
+ {id:'onboard',type:'process',step:3,x:760,y:600,title:'Onboard your team',
+  desc:'Everyone who works with you logs into the same system, each with their own view.',
+  steps:['Create a login for each person','Give each role its own view','Walk them through their first task'],
+  examples:['Sales sees only the sales dashboard','Support sees only the ticket queue'],
+  img:'assets/img/onboard.jpg',cap:'One system the whole team logs into.',
+  resources:[{t:'Read: Onboarding your team to AI (Bruno Ashford)',u:'#'}],
+  done:'Your whole team is inside the system.'},
+
+ {id:'trainppl',type:'process',step:4,x:760,y:760,title:'Train people to use AI',
+  desc:'Teach the team to work with AI and get more done, subsidized while tokens are still cheap.',
+  steps:['Run a short AI onboarding','Show them how to hand work to agents','Set the rule: try AI first'],
+  examples:['A 30-minute try-AI-first onboarding','A shared library of prompts that actually work'],
+  img:'assets/img/trainppl.jpg',cap:'People who reach for AI by default.',
+  resources:[{t:'Read: Make your team AI-native (Bruno Ashford)',u:'#'}],
+  done:'People reach for AI by default.'},
+
+ {id:'audit',type:'decision',step:5,x:760,y:990,title:'Where does the time go?',
+  desc:'Map the bottlenecks: repetitive tasks, slow approvals, manual reports. Each one is a candidate for an agent.',
+  steps:['List tasks that eat hours','Mark the repetitive, rule-based ones','Rank areas to attack first'],
+  examples:['We spend 6 hours a week chasing invoices','Every quote is copy-pasted by hand'],
+  img:'assets/img/audit.jpg',cap:'Find the work that eats your week.',
+  video:'edmAECbA7OQ',videoTitle:'How Companies Are Actually Using AI in 2026 (Real Examples)',
+  resources:[{t:'Template: bottleneck audit sheet',u:'#'}],
+  done:'You have a ranked list of what to automate.'},
+
+ {id:'sales',type:'area',x:250,y:1200,title:'Sales',desc:'Lead follow-up, qualification and scheduling, the busywork that slows deals down.',
+  steps:['Map the sales busywork','Pick the highest-volume task'],
+  examples:['Agent qualifies inbound leads in seconds','Agent books the call and logs the CRM'],
+  img:'assets/img/sales.jpg',cap:'Sales busywork, handled by an agent.',
+  resources:[{t:'Read: AI in sales (Bruno Ashford)',u:'#'}],done:'Sales bottleneck picked.'},
+ {id:'support',type:'area',x:505,y:1200,title:'Support',desc:'Tickets, FAQs and routing, repetitive answers that eat your team’s day.',
+  steps:['Map recurring tickets','Pick the most common request'],
+  examples:['Agent drafts replies to common tickets','Agent routes each ticket to the right person'],
+  img:'assets/img/support.jpg',cap:'Faster answers, happier customers.',
+  resources:[{t:'Read: AI support desk (Bruno Ashford)',u:'#'}],done:'Support bottleneck picked.'},
+ {id:'finance',type:'area',x:760,y:1200,title:'Finance',desc:'Invoices, reconciliation and reminders, rule-based work perfect for an agent.',
+  steps:['Map the finance routine','Pick the most manual task'],
+  examples:['Agent reconciles invoices vs the bank feed','Agent sends payment reminders on time'],
+  img:'assets/img/finance.jpg',cap:'Rule-based finance work, automated.',
+  resources:[{t:'Read: AI for finance ops (Bruno Ashford)',u:'#'}],done:'Finance bottleneck picked.'},
+ {id:'content',type:'area',x:1015,y:1200,title:'Content',desc:'Drafts, posts and scheduling, high volume with clear standards.',
+  steps:['Map the content pipeline','Pick the most repetitive step'],
+  examples:['Agent drafts a week of posts from one brief','Agent reformats and schedules per channel'],
+  img:'assets/img/content.jpg',cap:'A content engine that never sleeps.',
+  video:'z2DXb9m6ul4',videoTitle:'How I Automate Google Ads & SEO Using AI Agents + Claude Code',
+  resources:[{t:'Read: AI content engine (Bruno Ashford)',u:'#'}],done:'Content bottleneck picked.'},
+ {id:'ops',type:'area',x:1270,y:1200,title:'Operations',desc:'Reports, data entry and handoffs, the glue work nobody wants.',
+  steps:['Map the ops handoffs','Pick the biggest time sink'],
+  examples:['Agent compiles the weekly report automatically','Agent moves data between tools, no copy-paste'],
+  img:'assets/img/ops.jpg',cap:'The glue work, done automatically.',
+  resources:[{t:'Read: AI operations (Bruno Ashford)',u:'#'}],done:'Ops bottleneck picked.'},
+
+ {id:'buildagent',type:'process',step:6,x:760,y:1440,title:'Build the agent / skill',
+  desc:'For each bottleneck, build an agent or skill that spends tokens to do the task end to end.',
+  steps:['Describe the task to Claude','Give it the tools and data it needs','Wrap it as a reusable skill'],
+  examples:['A lead-qualifier skill','An invoice-reconciler agent'],
+  img:'assets/img/buildagent.jpg',cap:'Agents that spend tokens, not your hours.',
+  video:'RWPLEpve768',videoTitle:'Claude Code Tutorial: Automate Your Business With AI Agents',
+  resources:[{t:'What are agent skills?',u:'#'},{t:'Read: Build your first agent (Bruno Ashford)',u:'#'}],
+  done:'The agent completes the task on its own.'},
+
+ {id:'trainagent',type:'process',step:7,x:760,y:1600,title:'Train it through Claude',
+  desc:'Train the agent like a new hire, in plain language, until the output matches your standard.',
+  steps:['Run it on real examples','Correct mistakes in plain English','Save the standard it must follow'],
+  examples:['Show 10 real invoices, correct the misses','Save the rule: flag anything over $5k'],
+  img:'assets/img/trainagent.jpg',cap:'Coach the agent like a new hire.',
+  resources:[{t:'Read: Train agents like new hires (Bruno Ashford)',u:'#'}],
+  done:'Output matches your standard.'},
+
+ {id:'reliable',type:'decision',x:760,y:1800,title:'Reliable & secure?',
+  desc:'Before it touches real work, it must be consistent and secure. Not yet? Loop back and keep training.',
+  steps:['Check output consistency','Check data and access security','Approve for real use'],
+  examples:['Same input, same output, 20 times in a row','Only the finance role can run finance agents'],
+  img:'assets/img/reliable.jpg',cap:'Secure and consistent before it goes live.',
+  resources:[{t:'AI security checklist (Bruno Ashford)',u:'#'}],
+  done:'Green light for production.'},
+
+ {id:'open',type:'process',step:8,x:760,y:2040,title:'Open the secure platform',
+  desc:'Open the system to members securely. They log in and see their tasks, already automated.',
+  steps:['Turn on member access','Show each member their task queue','Set permissions per role'],
+  examples:['A member logs in and sees 3 tasks already done','Nothing to install, just a browser login'],
+  img:'assets/img/open.jpg',cap:'Members log in to work already done.',
+  resources:[{t:'Read: A platform your team logs into (Bruno Ashford)',u:'#'}],
+  done:'Members work inside the platform.'},
+
+ {id:'members',type:'process',step:9,x:760,y:2200,title:'One platform, no new tools',
+  desc:'Everything is integrated: no new software to buy, it all lives in your platform.',
+  steps:['Fold existing tools into the platform','Cancel what you no longer need','Standardize on one login'],
+  examples:['CRM, docs and reports in one login','Cancelled four separate SaaS subscriptions'],
+  img:'assets/img/members.jpg',cap:'One login instead of ten tools.',
+  resources:[{t:'Read: One platform, no new tools (Bruno Ashford)',u:'#'}],
+  done:'One platform runs the company.'},
+
+ {id:'manage',type:'process',step:10,x:760,y:2400,title:'Humans orchestrate',
+  desc:'People stop grinding tasks and start managing agents. Judgment over busywork.',
+  steps:['Assign an owner to each agent','Review agent output daily','Keep training the agents'],
+  examples:['A manager reviews agent output each morning','Each agent has a named human owner'],
+  img:'assets/img/manage.jpg',cap:'People manage agents, not busywork.',
+  resources:[{t:'Read: Managing a fleet of agents (Bruno Ashford)',u:'#'}],
+  done:'Humans manage, agents execute.'},
+
+ {id:'measure',type:'process',step:11,x:760,y:2560,title:'Measure output, quality & cost',
+  desc:'Track what changed: more output, better quality, lower cost per task.',
+  steps:['Track output per person','Track quality and error rate','Track cost per task in tokens'],
+  examples:['Output per person up 3x','Cost per task down from $4 to $0.20'],
+  img:'assets/img/measure.jpg',cap:'See the gains in real numbers.',
+  resources:[{t:'Read: Measure AI ROI (Bruno Ashford)',u:'#'}],
+  done:'You can see the gains in numbers.'},
+
+ {id:'improve',type:'decision',step:12,x:760,y:2760,title:'Room to improve?',
+  desc:'There is always another bottleneck. Yes? Loop back and map the next one. The system compounds.',
+  steps:['Find the next bottleneck','Prioritize by impact','Send it back into the loop'],
+  examples:['This month: automate scheduling','Next month: automate reporting'],
+  img:'assets/img/improve.jpg',cap:'A loop that compounds every month.',
+  resources:[{t:'Read: The continuous improvement loop (Bruno Ashford)',u:'#'}],
+  done:'Next improvement queued.'},
+
+ {id:'scale',type:'terminal gold',x:300,y:2760,title:'Scale',
+  desc:'More output. Higher quality. Far lower cost. You produce much more, for much less, and it keeps compounding.',
+  steps:['Produce much more, for much less','Reinvest the time you save','Keep the loop running'],
+  examples:['Same team, three times the output','Grow revenue without growing headcount'],
+  img:'assets/img/scale.jpg',cap:'Grow output without growing headcount.',
+  video:'kr4Sa8Yk_eA',videoTitle:'How AI Saved My Business (and Gave Me My Life Back)',
+  resources:[{t:'Work with Bruno Ashford',u:'#'}],
+  done:'The company scales without scaling headcount.'},
+];
+const EDGES=[['start','build'],['build','deploy'],['deploy','onboard'],['onboard','trainppl'],['trainppl','audit'],
+ ['audit','sales'],['audit','support'],['audit','finance'],['audit','content'],['audit','ops'],
+ ['sales','buildagent'],['support','buildagent'],['finance','buildagent'],['content','buildagent'],['ops','buildagent'],
+ ['buildagent','trainagent'],['trainagent','reliable'],['reliable','open','Yes'],['reliable','trainagent','No','loop'],
+ ['open','members'],['members','manage'],['manage','measure'],['measure','improve'],['improve','scale','Done'],['improve','audit','Next','loop']];
+
+const DIMS={terminal:[224,60],process:[248,84],decision:[180,180],area:[206,60]};
+function dim(n){return DIMS[n.type.split(' ')[0]]||DIMS.process;}
+const byId={},els={};NODES.forEach(n=>byId[n.id]=n);
+const canvas=document.getElementById('canvas'),svg=document.getElementById('edges');
+canvas.style.width=CANVAS_W+'px';canvas.style.height=CANVAS_H+'px';svg.setAttribute('width',CANVAS_W);svg.setAttribute('height',CANVAS_H);
+PHASES.forEach((p,i)=>{const nextY=(PHASES[i+1]?PHASES[i+1].y:CANVAS_H);const el=document.createElement('div');el.className='phase';el.style.top=p.y+'px';el.style.width=CANVAS_W+'px';el.style.height=(nextY-p.y)+'px';el.innerHTML=`<div class="pn">Phase</div><div class="pl">${p.label} &middot; ${p.name}</div>`;canvas.appendChild(el);});
+NODES.forEach(n=>{const el=document.createElement('div');el.className='node '+n.type;el.style.left=n.x+'px';el.style.top=n.y+'px';
+ const inner=n.type.startsWith('decision')?`<div class="inner">${n.step?`<div class="step">${n.step}</div>`:''}<div class="txt"><div class="nt">${n.title}</div><div class="more">click</div></div></div>`:`<div class="inner">${n.step?`<div class="step">${n.step}</div>`:''}<div class="nt">${n.title}</div>${(n.type.startsWith('process'))?`<div class="nd">${n.desc.slice(0,50)}…</div>`:''}<div class="more">click</div></div>`;
+ el.innerHTML=inner;el.onclick=()=>{if(!dragged)openDrawer(n.id);};canvas.appendChild(el);els[n.id]=el;});
+function anchor(n,s){const [w,h]=dim(n),hw=w/2,hh=h/2;return s==='top'?[n.x,n.y-hh]:s==='bottom'?[n.x,n.y+hh]:s==='left'?[n.x-hw,n.y]:[n.x+hw,n.y];}
+EDGES.forEach(e=>{const a=byId[e[0]],b=byId[e[1]],label=e[2],loop=e[3]==='loop';let d,lx,ly;
+ if(loop){const [ax,ay]=anchor(a,'right'),[bx,by]=anchor(b,'right');const ext=Math.max(ax,bx,CANVAS_W-90);d=`M ${ax} ${ay} L ${ext} ${ay} L ${ext} ${by} L ${bx} ${by}`;lx=ext;ly=(ay+by)/2;}
+ else{const [ax,ay]=anchor(a,'bottom');let bs='top';if(Math.abs(b.y-a.y)<40&&b.x<a.x-60)bs='right';const [bx,by]=anchor(b,bs);
+  if(Math.abs(ax-bx)<2)d=`M ${ax} ${ay} L ${bx} ${by}`;else{const my=(ay+by)/2;d=`M ${ax} ${ay} L ${ax} ${my} L ${bx} ${my} L ${bx} ${by}`;}lx=(ax+bx)/2;ly=ay+20;}
+ const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d',d);p.setAttribute('class','edge flow');p.setAttribute('marker-end','url(#arrow)');svg.appendChild(p);
+ if(label){const g=document.createElementNS('http://www.w3.org/2000/svg','g');const bg=document.createElementNS('http://www.w3.org/2000/svg','rect');bg.setAttribute('class','elabel-bg');bg.setAttribute('x',lx-24);bg.setAttribute('y',ly-14);bg.setAttribute('width',48);bg.setAttribute('height',20);bg.setAttribute('rx',4);const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',lx);t.setAttribute('y',ly);t.setAttribute('text-anchor','middle');t.setAttribute('dominant-baseline','middle');t.setAttribute('class','elabel');t.textContent=label;g.appendChild(bg);g.appendChild(t);svg.appendChild(g);}});
+function openDrawer(id){const n=byId[id];
+ document.getElementById('dwKick').textContent=n.step?('Step '+n.step):(n.type.startsWith('terminal')?'Milestone':n.type.startsWith('decision')?'Decision':'Area');
+ document.getElementById('dwTitle').textContent=n.title;
+ let h='';
+ if(n.img)h+=`<img class="dw-hero" src="${n.img}" alt="">`;
+ if(n.cap)h+=`<div class="dw-cap">${n.cap}</div>`;
+ h+=`<div class="dw-in"><div class="dw-desc">${n.desc}</div>`;
+ if(n.video)h+=`<div class="dw-sec">Watch (Bruno Ashford)</div><iframe class="dw-video" src="https://www.youtube.com/embed/${n.video}" title="${n.videoTitle||''}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe><div class="dw-vlabel"><svg viewBox="0 0 24 24"><path d="M23 12s0-4-.5-5.8a3 3 0 0 0-2.1-2.1C18.6 3.5 12 3.5 12 3.5s-6.6 0-8.4.6A3 3 0 0 0 1.5 6.2C1 8 1 12 1 12s0 4 .5 5.8a3 3 0 0 0 2.1 2.1c1.8.6 8.4.6 8.4.6s6.6 0 8.4-.6a3 3 0 0 0 2.1-2.1C23 16 23 12 23 12z"/><path fill="#120b06" d="M10 15.5l6-3.5-6-3.5z"/></svg>${n.videoTitle||'Watch on YouTube'}</div>`;
+ if(n.steps&&n.steps.length)h+=`<div class="dw-sec">Step by step</div><div class="dw-steps">${n.steps.map(s=>`<div>${s}</div>`).join('')}</div>`;
+ if(n.examples&&n.examples.length)h+=`<div class="dw-sec">Examples</div><div class="dw-ex">${n.examples.map(x=>`<div>${x}</div>`).join('')}</div>`;
+ if(n.resources&&n.resources.length)h+=`<div class="dw-sec">Resources</div><div class="dw-links">${n.resources.map(l=>`<a class="dw-link" href="${l.u}" target="_blank">&rarr; ${l.t}</a>`).join('')}</div>`;
+ h+=`</div>`;
+ if(n.done)h+=`<div class="dw-done"><b>Done when:</b> ${n.done}</div>`;
+ document.getElementById('dwBody').innerHTML=h;document.getElementById('dwBody').scrollTop=0;
+ Object.values(els).forEach(el=>el.classList.remove('active'));if(els[id])els[id].classList.add('active');
+ document.getElementById('drawer').classList.add('open');}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');Object.values(els).forEach(el=>el.classList.remove('active'));}
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'){closeDrawer();return;}
+ const STEP=90;
+ if(e.key==='ArrowUp'){ty+=STEP;apply();e.preventDefault();}
+ else if(e.key==='ArrowDown'){ty-=STEP;apply();e.preventDefault();}
+ else if(e.key==='ArrowLeft'){tx+=STEP;apply();e.preventDefault();}
+ else if(e.key==='ArrowRight'){tx-=STEP;apply();e.preventDefault();}
+ else if(e.key==='+'||e.key==='='){zoom(1.15);}
+ else if(e.key==='-'||e.key==='_'){zoom(.87);}
+ else if(e.key==='0'){resetView();}
+});
+let scale=1,tx=0,ty=0,dragging=false,dragged=false,sx,sy;const vp=document.getElementById('vp');
+function apply(){canvas.style.transform=`translate(${tx}px,${ty}px) scale(${scale})`;}
+function zoom(f){const ns=Math.min(1.8,Math.max(.28,scale*f)),cx=vp.clientWidth/2,cy=vp.clientHeight/2;tx=cx-(cx-tx)*(ns/scale);ty=cy-(cy-ty)*(ns/scale);scale=ns;apply();}
+vp.addEventListener('wheel',e=>{e.preventDefault();
+ if(e.ctrlKey){ // pinch-to-zoom no trackpad Mac (e Ctrl+scroll)
+   const f=e.deltaY<0?1.08:.92,r=vp.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top,ns=Math.min(1.8,Math.max(.28,scale*f));
+   tx=mx-(mx-tx)*(ns/scale);ty=my-(my-ty)*(ns/scale);scale=ns;apply();
+ } else { // dois dedos no trackpad = mover (pan) nas 4 direcoes
+   tx-=e.deltaX;ty-=e.deltaY;apply();
+ }
+},{passive:false});
+vp.addEventListener('mousedown',e=>{dragging=true;dragged=false;sx=e.clientX-tx;sy=e.clientY-ty;vp.classList.add('grabbing');});
+window.addEventListener('mousemove',e=>{if(!dragging)return;const nx=e.clientX-sx,ny=e.clientY-sy;if(Math.abs(nx-tx)>4||Math.abs(ny-ty)>4)dragged=true;tx=nx;ty=ny;apply();});
+window.addEventListener('mouseup',()=>{dragging=false;vp.classList.remove('grabbing');setTimeout(()=>dragged=false,30);});
+function resetView(){fitView();}
+function fitView(){const s=Math.min((vp.clientWidth-40)/CANVAS_W,(vp.clientHeight-110)/CANVAS_H);scale=Math.min(1,s);tx=(vp.clientWidth-CANVAS_W*scale)/2;ty=86;apply();}
+fitView();window.addEventListener('resize',fitView);
+const qp=new URLSearchParams(location.search);if(qp.get('open'))openDrawer(qp.get('open'));
+</script>
+</body></html>

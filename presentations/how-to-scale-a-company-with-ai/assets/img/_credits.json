@@ -1,0 +1,82 @@
+{
+  "start": {
+    "page": "https://www.pexels.com/photo/crop-faceless-person-using-laptop-in-darkness-5926378/",
+    "by": "Sora Shimazaki"
+  },
+  "build": {
+    "page": "https://www.pexels.com/photo/close-up-view-of-system-hacking-5380618/",
+    "by": "Tima Miroshnichenko"
+  },
+  "deploy": {
+    "page": "https://www.pexels.com/photo/computer-server-in-data-center-room-17489163/",
+    "by": "panumas nikhomkhai"
+  },
+  "onboard": {
+    "page": "https://www.pexels.com/photo/businesspeople-brainstorming-in-a-meeting-7693692/",
+    "by": "Yan Krukau"
+  },
+  "trainppl": {
+    "page": "https://www.pexels.com/photo/a-man-is-giving-a-presentation-to-a-group-of-people-15141483/",
+    "by": "Matheus Bertelli"
+  },
+  "audit": {
+    "page": "https://www.pexels.com/photo/person-holding-white-printer-paper-graphs-9034283/",
+    "by": "RDNE Stock project"
+  },
+  "sales": {
+    "page": "https://www.pexels.com/photo/men-shaking-hands-7578901/",
+    "by": "Kindel Media"
+  },
+  "support": {
+    "page": "https://www.pexels.com/photo/four-people-wearing-headphones-8867405/",
+    "by": "Yan Krukau"
+  },
+  "finance": {
+    "page": "https://www.pexels.com/photo/a-close-up-shot-of-a-person-using-a-calculator-5921494/",
+    "by": "RDNE Stock project"
+  },
+  "content": {
+    "page": "https://www.pexels.com/photo/an-open-notebook-with-notes-7818107/",
+    "by": "Leeloo The First"
+  },
+  "ops": {
+    "page": "https://www.pexels.com/photo/people-working-at-the-office-8866761/",
+    "by": "Yan Krukau"
+  },
+  "buildagent": {
+    "page": "https://www.pexels.com/photo/white-robot-action-figure-on-blue-string-lights-8566470/",
+    "by": "Kindel Media"
+  },
+  "trainagent": {
+    "page": "https://www.pexels.com/photo/close-up-shot-of-a-person-using-a-laptop-7172094/",
+    "by": "MART  PRODUCTION"
+  },
+  "reliable": {
+    "page": "https://www.pexels.com/photo/black-android-smartphone-on-top-of-white-book-39584/",
+    "by": "Pixabay"
+  },
+  "open": {
+    "page": "https://www.pexels.com/photo/men-sitting-at-the-desks-in-an-office-and-using-computers-6804068/",
+    "by": "cottonbro studio"
+  },
+  "members": {
+    "page": "https://www.pexels.com/photo/fiber-optic-switch-with-bright-connectors-in-studio-4373997/",
+    "by": "Brett Sayles"
+  },
+  "manage": {
+    "page": "https://www.pexels.com/photo/man-in-black-suit-standing-with-his-arms-crossed-7433929/",
+    "by": "Vlada Karpovich"
+  },
+  "measure": {
+    "page": "https://www.pexels.com/photo/close-up-photo-of-black-digital-tablet-on-brown-surface-10020092/",
+    "by": "weCare Media"
+  },
+  "improve": {
+    "page": "https://www.pexels.com/photo/close-up-of-vibrant-metallic-gears-in-valencia-39383262/",
+    "by": "Rafael Minguet Delgado"
+  },
+  "scale": {
+    "page": "https://www.pexels.com/photo/drone-shot-of-auckland-at-sunset-18201085/",
+    "by": "Ollie Craig"
+  }
+}
