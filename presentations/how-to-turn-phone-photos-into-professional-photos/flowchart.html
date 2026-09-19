@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Turn Phone Photos into Professional Photos with AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+ *{margin:0;padding:0;box-sizing:border-box}
+ :root{--walnut:#120b06;--cream:#F3ECE0;--bronze:#C9A15C;--gold:#E7C98F;--muted:#b6a48c;--card:#1d140b;--line:rgba(201,161,92,.45);--edge:#8a6a34}
+ html,body{height:100%}
+ body{font-family:'Jost',sans-serif;background:var(--walnut);color:var(--cream);overflow:hidden;-webkit-font-smoothing:antialiased}
+ .bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 50% -4%, #2a1a0a 0%, var(--walnut) 55%),linear-gradient(rgba(201,161,92,.045) 1px, transparent 1px) 0 0/46px 46px,linear-gradient(90deg, rgba(201,161,92,.045) 1px, transparent 1px) 0 0/46px 46px}
+ header{position:fixed;top:0;left:0;width:100%;z-index:20;padding:15px 26px;display:flex;align-items:center;gap:14px;background:linear-gradient(180deg, rgba(18,11,6,.95), rgba(18,11,6,0));backdrop-filter:blur(4px)}
+ header .brand{display:flex;align-items:center;gap:12px}header .brand img{height:32px}
+ header .tt{font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:600;line-height:1}
+ header .tt small{display:block;font-family:'Jost';font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--bronze);font-weight:500;margin-bottom:2px}
+ .cc-badge{font:600 11px 'Jost';letter-spacing:1.2px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,161,92,.5);padding:5px 12px;border-radius:999px;background:rgba(201,161,92,.12);white-space:nowrap}
+ .legend{margin-left:auto;display:flex;gap:14px;align-items:center;font-size:11px;color:var(--muted)}
+ .legend b{display:inline-flex;align-items:center;gap:6px;font-weight:400}
+ .lg{width:20px;height:13px;border:1.5px solid var(--bronze);background:var(--card)}
+ .lg.term{border-radius:9px}.lg.proc{border-radius:4px}.lg.dec{width:14px;height:14px;transform:rotate(45deg)}
+ .hint{font-size:11px;color:var(--gold);opacity:.8}
+ #vp{position:fixed;inset:0;z-index:1;cursor:grab;overflow:hidden}#vp.grabbing{cursor:grabbing}
+ #canvas{position:absolute;left:0;top:0;transform-origin:0 0}
+ svg.edges{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+ .edge{fill:none;stroke:var(--edge);stroke-width:2.2}
+ .edge.flow{stroke-dasharray:9 8;animation:dash 1.1s linear infinite}
+ @keyframes dash{to{stroke-dashoffset:-34}}
+ .edge.explain{stroke:rgba(201,161,92,.42);stroke-width:1.5;stroke-dasharray:4 5;animation:none}
+ .phase{position:absolute;left:0;border-top:1px dashed rgba(201,161,92,.22);z-index:1}
+ .phase .pl{position:absolute;left:20px;top:12px;font-family:'Cormorant Garamond',serif;font-size:28px;color:rgba(201,161,92,.4);font-weight:600}
+ .phase .pn{position:absolute;left:20px;top:2px;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(201,161,92,.5);font-weight:600}
+ .node{position:absolute;transform:translate(-50%,-50%);cursor:pointer;transition:transform .15s;z-index:3}
+ .node:hover{transform:translate(-50%,-50%) scale(1.04);z-index:5}
+ .node .inner{background:var(--card);border:1.6px solid var(--line);box-shadow:0 14px 30px rgba(0,0,0,.5);display:flex;flex-direction:column;justify-content:center;padding:13px 17px;position:relative}
+ .node:hover .inner{border-color:var(--gold);box-shadow:0 0 0 4px rgba(201,161,92,.12),0 16px 38px rgba(0,0,0,.55)}
+ .node.active{z-index:6}
+ .node.active .inner{border-color:var(--gold)!important;animation:glowPulse 2.1s ease-in-out infinite}
+ @keyframes glowPulse{0%,100%{box-shadow:0 0 0 3px rgba(231,201,143,.35),0 0 22px 3px rgba(201,161,92,.45),0 16px 38px rgba(0,0,0,.55)}50%{box-shadow:0 0 0 4px rgba(231,201,143,.6),0 0 44px 11px rgba(201,161,92,.72),0 16px 38px rgba(0,0,0,.55)}}
+ .node .step{position:absolute;top:-11px;left:-11px;width:28px;height:28px;border-radius:50%;background:linear-gradient(180deg,var(--gold),var(--bronze));color:var(--walnut);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(0,0,0,.5)}
+ .step.qmark{background:linear-gradient(180deg,#3a2a12,#241708)!important;color:var(--gold)!important;border:1px solid var(--bronze);font-size:15px}
+ .node .nt{font-size:16px;font-weight:600;color:var(--cream);line-height:1.15}
+ .node .nd{font-size:12px;color:var(--muted);font-weight:300;margin-top:3px;line-height:1.25}
+ .node .more{position:absolute;bottom:7px;right:11px;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--bronze);opacity:.7}
+ .node.process .inner{width:250px;min-height:84px;border-radius:14px}
+ .node.terminal .inner{width:236px;min-height:60px;border-radius:32px;align-items:center;text-align:center;background:linear-gradient(160deg,#2a1c0b,#1a1108)}
+ .node.terminal.gold .inner{background:linear-gradient(160deg,#4a3512,#2a1c0b);border-color:var(--gold)}
+ .node.terminal .nt{font-family:'Cormorant Garamond',serif;font-size:20px}
+ .node.decision .inner{width:190px;height:190px;transform:rotate(45deg);border-radius:16px;align-items:center;text-align:center;padding:0}
+ .node.decision .txt{transform:rotate(-45deg);width:150px}.node.decision .nt{font-size:15px}
+ .node.decision .step{transform:rotate(-45deg);top:4px;left:4px}.node.decision .more{transform:rotate(-45deg);bottom:24px;right:24px}
+ .node.explainer .inner{width:212px;min-height:56px;border-radius:12px;border-style:dashed;border-color:rgba(201,161,92,.5);background:rgba(29,20,11,.55)}
+ .node.explainer .nt{font-size:14px;color:var(--gold);font-weight:500}
+ .node.explainer .more{color:var(--muted)}
+ #drawer{position:fixed;top:0;right:0;height:100%;width:430px;max-width:92vw;z-index:30;background:linear-gradient(180deg,#1d140b,#14100a);border-left:1px solid var(--line);box-shadow:-20px 0 60px rgba(0,0,0,.6);transform:translateX(100%);transition:transform .32s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+ #drawer.open{transform:translateX(0)}
+ .dw-head{padding:24px 26px 16px;border-bottom:1px solid rgba(201,161,92,.2);position:relative}
+ .dw-kick{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--bronze);font-weight:600}
+ .dw-title{font-family:'Cormorant Garamond',serif;font-size:31px;font-weight:600;color:var(--cream);line-height:1.05;margin-top:8px}
+ .dw-close{position:absolute;top:18px;right:22px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--cream);font-size:18px;cursor:pointer}
+ .dw-close:hover{background:rgba(201,161,92,.15)}
+ .dw-body{padding:0 0 40px;overflow-y:auto;flex:1}
+ .dw-hero{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;border-bottom:1px solid rgba(201,161,92,.2);cursor:zoom-in}
+ .dw-heform{position:relative}
+ .dw-zoom{position:absolute;top:10px;right:10px;z-index:2;background:rgba(13,11,8,.75);border:1px solid rgba(201,161,92,.4);color:var(--gold);border-radius:8px;padding:4px 9px;font:600 10px 'Jost';letter-spacing:.5px;text-transform:uppercase;pointer-events:none}
+ .lb{position:fixed;inset:0;z-index:60;background:rgba(8,5,3,.93);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:44px;cursor:zoom-out}
+ .lb.open{display:flex}
+ .lb-img{max-width:96vw;max-height:92vh;border-radius:10px;box-shadow:0 30px 80px rgba(0,0,0,.7);border:1px solid rgba(201,161,92,.3)}
+ .lb-x{position:fixed;top:22px;right:26px;width:46px;height:46px;border-radius:50%;border:1px solid rgba(201,161,92,.45);background:rgba(20,15,11,.85);color:var(--cream);font-size:26px;line-height:1;cursor:pointer;z-index:61}
+ .lb-x:hover{background:rgba(201,161,92,.22);border-color:var(--gold)}
+ .dw-cap{font-size:11px;color:var(--muted);padding:7px 26px 0;font-style:italic}
+ .dw-in{padding:18px 26px 0}
+ .dw-desc{font-size:16px;line-height:1.55;color:#e2d6c5;font-weight:300}
+ .dw-video{width:100%;aspect-ratio:16/9;border:0;display:block;border-radius:12px;margin-top:11px;background:#000}
+ .dw-vlabel{font-size:12.5px;color:var(--gold);margin-top:8px;display:flex;align-items:center;gap:7px}
+ .dw-vlabel svg{width:16px;height:16px;fill:#ff3b30}
+ .tm{border-radius:12px;overflow:hidden;border:1px solid rgba(201,161,92,.22);background:#0d0b08;box-shadow:0 14px 34px rgba(0,0,0,.45);margin-top:11px}
+ .tm-bar{display:flex;align-items:center;gap:.6rem;padding:8px 11px;background:#1b1510;border-bottom:1px solid rgba(201,161,92,.14)}
+ .tm-dots{display:flex;gap:6px}.tm-dots i{width:11px;height:11px;border-radius:50%;display:block}
+ .tm-dots i:nth-child(1){background:#ff5f57}.tm-dots i:nth-child(2){background:#febc2e}.tm-dots i:nth-child(3){background:#28c840}
+ .tm-title{font:500 12px ui-monospace,Menlo,monospace;color:rgba(243,236,224,.5)}
+ .tm-copy{margin-left:auto;display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(201,161,92,.3);background:rgba(201,161,92,.08);color:var(--gold);border-radius:8px;padding:4px 10px;font:600 11px 'Jost';cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+ .tm-copy:hover{background:rgba(231,201,143,.18);border-color:var(--gold)}
+ .tm-copy.copied{background:#28c840;border-color:#28c840;color:#08210c}
+ .tm-body{margin:0;padding:13px 14px;font:400 13px/1.6 ui-monospace,Menlo,monospace;color:#e8e2d6;white-space:pre-wrap;word-break:break-word}
+ .tm-body code{font:inherit;color:inherit}
+ .dw-sec{margin-top:22px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--bronze);font-weight:600}
+ .dw-steps{margin-top:11px;counter-reset:s;display:flex;flex-direction:column;gap:9px}
+ .dw-steps div{font-size:14.5px;color:#d9ccb8;font-weight:300;padding-left:34px;position:relative;line-height:1.4}
+ .dw-steps div:before{counter-increment:s;content:counter(s);position:absolute;left:0;top:-1px;width:23px;height:23px;border-radius:50%;background:rgba(201,161,92,.14);border:1px solid var(--bronze);color:var(--gold);font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:600}
+ .dw-tip{margin:18px 26px 0;padding:13px 16px;border-radius:10px;background:rgba(201,161,92,.1);border-left:3px solid var(--gold);font-size:14px;color:#e9dcc6;line-height:1.45}
+ .dw-tip b{color:var(--gold);font-weight:600}
+ .dw-done{margin:14px 26px 0;padding:13px 16px;border-radius:10px;background:rgba(120,170,90,.1);border-left:3px solid #7bab5a;font-size:14px;color:#cfe0be}
+ .dw-done b{color:#9ecb7e;font-weight:600}
+ .dw-links{margin-top:11px;display:flex;flex-direction:column;gap:9px;padding:0}
+ .dw-in .dw-links{padding:0}
+ .dw-link{display:flex;gap:9px;padding:11px 14px;border-radius:10px;background:rgba(201,161,92,.09);border-left:3px solid var(--bronze);color:var(--gold);text-decoration:none;font-size:13.5px}
+ .dw-link:hover{background:rgba(201,161,92,.16)}
+ .zoom{position:fixed;bottom:20px;left:20px;z-index:20;display:flex;gap:8px}
+ .zoom button{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:rgba(29,20,11,.9);color:var(--cream);font-size:19px;cursor:pointer}
+ .zoom button:hover{border-color:var(--gold);color:var(--gold)}
+ .foot{position:fixed;bottom:22px;right:22px;z-index:20;font-size:11px;letter-spacing:2px;color:var(--gold);opacity:.7}
+</style></head>
+<body>
+<div class="bg"></div>
+<header><div class="brand"><img src="logo-bronze.png" alt="Bruno Ashford"><div class="tt"><small>Bruno Ashford · Interactive Playbook</small>Turn Phone Photos into Professional Photos</div><span class="cc-badge">Built with Claude Code + Higgsfield</span></div>
+<div class="legend"><b><span class="lg term"></span>Start / End</b><b><span class="lg proc"></span>Step</b><b><span class="lg dec"></span>Decision</b><span class="hint">Click a node · two-finger scroll or arrows to move · pinch or +/- to zoom</span></div></header>
+<div id="vp"><div id="canvas"><svg class="edges" id="edges"><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#b0863f"></path></marker></defs></svg></div></div>
+<aside id="drawer"><div class="dw-head"><div class="dw-kick" id="dwKick"></div><div class="dw-title" id="dwTitle"></div><button class="dw-close" onclick="closeDrawer()">&times;</button></div><div class="dw-body" id="dwBody"></div></aside>
+<div class="zoom"><button onclick="zoom(1.15)">+</button><button onclick="zoom(.87)">&minus;</button><button onclick="resetView()">&#8862;</button></div>
+<div class="foot">brunoashford.com</div>
+<div class="lb" id="lightbox"><button class="lb-x" type="button" onclick="closeLB()">&times;</button><img class="lb-img" id="lbImg" src="" alt=""></div>
+<script>
+const CANVAS_W=1200, CANVAS_H=2500;
+const PHASES=[{y:20,label:'01',name:'Setup & raw photo'},{y:590,label:'02',name:'Pick the right AI'},{y:830,label:'03',name:'The recipe (what the skill does)'},{y:1690,label:'04',name:'Generate & finish'},{y:2040,label:'05',name:'Save it as one skill'}];
+const IMG_NODES=new Set([]);
+const NODES=[
+ {id:'start',type:'terminal',x:600,y:90,title:'Your amateur photo',
+  desc:"You've got a phone photo of your work: crooked walls, poor lighting, that unmistakable amateur look. The goal is to make it look like a professional shot, without faking what's really there.",
+  steps:['Grab the raw photo of your work','Notice what is wrong: tilt, light, angle','Decide it deserves a pro finish'],
+  tip:'This works for interiors, job sites, real estate, products, any work you photograph on a phone.',
+  img:'assets/img/start.jpg',cap:'A real phone photo, straight off the job (before).',
+  done:'You have a photo worth upgrading.'},
+
+ {id:'connect_hf',type:'process',step:1,x:600,y:270,title:'Connect Claude Code to Higgsfield',
+  desc:'First, give Claude Code the keys to an image AI. Connect it to your Higgsfield account so Claude can generate and edit photos for you, right from your terminal.',
+  steps:['Get your Higgsfield API key','Add it to Claude Code','Confirm Claude can generate a test image'],
+  tip:'This one-time connection is what lets Claude actually touch your photos.',
+  img:'assets/img/connect.jpg',cap:'Give Claude Code access to Higgsfield.',video:'eMUxtepjp4g',videoTitle:'How to Set Up AI Agents on Your Computer',
+  done:'Claude Code can generate images via Higgsfield.'},
+
+ {id:'prep',type:'process',step:2,x:600,y:450,title:'Prep the file',
+  desc:'Phone files need a quick clean-up first: iPhone HEIC photos often come rotated, and the AI works best on a properly oriented, full-resolution image.',
+  steps:['Auto-orient the image','Convert HEIC if needed','Keep the full resolution'],
+  tip:"Fix orientation first, or the AI will 'straighten' a sideways photo.",
+  img:'assets/img/prep.jpg',cap:'Get the file clean and upright before the AI.',done:'The file is clean and upright.'},
+
+ {id:'pickai',type:'decision',step:3,x:600,y:660,title:'Which AI model?',
+  desc:"This is the make-or-break choice. Most 'photo enhancers' only sharpen or relight, they can't fix a crooked angle. You need a model built for architectural geometry and perspective.",
+  steps:['Skip generic enhancers / upscalers','Pick a model strong at geometry & perspective','We use Seedream 5 Pro (via Higgsfield)'],
+  tip:'Nano Banana / Gemini is great at light, weak at architecture. Seedream 5 Pro fixes perspective. Choose by the job.',
+  img:'assets/img/pickai.jpg',video:'edmAECbA7OQ',videoTitle:'How Companies Are Actually Using AI in 2026 (Real Examples)',
+  done:'You picked a geometry-capable model.'},
+ {id:'why_note',type:'explainer',x:200,y:660,title:'Why not a photo enhancer?',
+  desc:"A regular enhancer or upscaler makes a blurry photo sharper, but it keeps the crooked walls and the amateur angle. To look professional, the geometry has to be fixed, and only a perspective-aware model does that.",
+  tip:'A sharper amateur photo is still an amateur photo. Fix the angle first.',done:"You get why sharpening alone isn't enough."},
+
+ {id:'preserve',type:'process',step:4,x:600,y:910,title:'Preserve the real scene first',
+  desc:'Rule number one: the AI must keep your real space exactly, same room, furniture, materials and colors, same viewpoint. It only fixes how it is shot, never invents what is in it.',
+  steps:['Tell the AI to keep the exact same space','Forbid adding, removing or inventing anything','Lock the original viewpoint'],
+  tip:"Put the 'keep it real' clause FIRST: models weight the opening instructions most.",
+  img:'assets/img/preserve.jpg',cap:'Same real room, nothing invented.',done:'The AI knows nothing fake is allowed.'},
+
+ {id:'fixdistort',type:'process',step:5,x:600,y:1080,title:'Fix distortion & straighten verticals',
+  desc:'Phone wide-angle lenses bend the walls (keystone). Tell the AI to correct the distortion so every vertical line is perfectly straight and plumb, natural proportions, no funhouse stretch.',
+  steps:['Correct wide-angle & keystone distortion','Make every vertical straight and plumb','Keep natural proportions'],
+  tip:'Straight verticals are the #1 signal that separates a pro photo from a phone snap.',
+  img:'assets/img/fixdistort.jpg',cap:'Before (left) vs after (right): verticals straightened.',done:'Walls and edges are perfectly straight.'},
+ {id:'keystone_note',type:'explainer',x:1000,y:1080,title:'What is keystone distortion?',
+  desc:"Keystone is when straight walls lean in or out because the phone's wide lens was tilted. It is why rooms look like they are falling over. Correcting it instantly reads as 'professional'.",
+  tip:'Wide-angle + tilt = leaning walls. The AI un-leans them.',done:'You can spot keystone in your own photos.'},
+
+ {id:'center',type:'process',step:6,x:600,y:1250,title:'Center & make it symmetric',
+  desc:'Recompose so the main subject sits on the vertical center line, balanced and mirror-symmetric, receding to a single centered vanishing point (one-point perspective), keeping your original point of view.',
+  steps:['Center the main subject','Balance both sides (mirror-symmetric)','Aim at one centered vanishing point'],
+  tip:'Equal breathing room on both sides is what makes it look composed, not random.',
+  img:'assets/img/center.jpg',cap:'Centered, balanced, one-point perspective.',done:'The shot is centered and balanced.'},
+ {id:'onepoint_note',type:'explainer',x:200,y:1250,title:'What is one-point perspective?',
+  desc:'One-point perspective is when the lines of a room all lead to a single point in the center, the look you see in high-end interior magazines. It feels calm, intentional and premium.',
+  tip:'One vanishing point in the middle gives that magazine feel.',done:'You understand the magazine look.'},
+
+ {id:'lens',type:'process',step:7,x:600,y:1420,title:'Set a 50mm lens at eye level',
+  desc:"Tell the AI to render it as if shot on a 50mm lens at eye level. That is the natural, flattering focal length pros use, and it kills the stretched phone-snapshot look.",
+  steps:['Specify a 50mm lens','Shoot at eye level','Drop the phone-snapshot feel'],
+  tip:'50mm is close to how the eye sees. Instantly less "phone", more "photographer".',
+  img:'assets/img/lens.jpg',cap:'A natural 50mm, eye-level look.',done:'It reads like a camera, not a phone.'},
+
+ {id:'lighting',type:'process',step:8,x:600,y:1590,title:'Add magazine lighting',
+  desc:'Finish with soft, even professional lighting and gentle contact shadows for depth, warm-neutral white balance, realistic contrast and crisp detail, edge to edge. The Architectural Digest finish.',
+  steps:['Soft, even lighting + contact shadows','Warm-neutral white balance','Crisp detail, fill the frame'],
+  tip:'Contact shadows (where objects meet the floor) are what make it look real, not flat.',
+  img:'assets/img/lighting.jpg',cap:'Soft, even, editorial lighting.',done:'It has that editorial finish.'},
+
+ {id:'generate',type:'process',step:9,x:600,y:1770,title:'Generate the photo',
+  desc:'Put the whole recipe together into one prompt and run it. This is the full prompt we use, copy it, add your photo, and let the model do the work.',
+  steps:['Combine all the clauses into one prompt','Run it on your photo','Compare against the original'],
+  tip:'One prompt, in order: preserve -> fix distortion -> center -> 50mm -> lighting. Order matters.',
+  img:'assets/img/generate.jpg',cap:'The full recipe, in one prompt.',done:'You have a professional-looking photo.'},
+
+ {id:'finish',type:'process',step:10,x:600,y:1940,title:'Finish to post size',
+  desc:'Export it at the size your channel needs, 1080x1350 for a feed post, centered, without cropping the important parts. Now it is ready to publish.',
+  steps:['Resize to 1080x1350 (feed post)','Center-crop without losing the subject','Export ready to post'],
+  tip:'Build the size presets once, reuse them for every future photo.',
+  img:'assets/img/finish.jpg',cap:'Exported at post size, ready to publish.',done:'The photo is ready to publish.'},
+
+ {id:'save_skill',type:'process',step:11,x:600,y:2120,title:'Save it as one skill',
+  desc:'Now turn the whole recipe into ONE reusable Claude Code skill. From then on you just drop a photo and trigger it, no re-typing prompts, no fiddling.',
+  steps:['Save the full recipe as a skill','Trigger it with any photo','Reuse it forever'],
+  tip:'Build the skill once; every future photo becomes a one-liner.',
+  img:'assets/img/saveskill.jpg',cap:'One skill, triggered with any photo.',
+  done:"You have a one-command 'pro-photo' skill."},
+
+ {id:'result',type:'terminal gold',x:600,y:2330,title:'Amateur snapshot to pro photo',
+  desc:'Same room, same truth, but now it looks like it belongs in a magazine: straight walls, centered composition, professional light. That is the difference between losing a client and winning one.',
+  steps:['Before: crooked, dim phone photo','After: straight, centered, magazine-lit','Same reality, professional presentation'],
+  tip:'Want the exact tool I use for this? If you are interested, I can share it for download.',
+  img:'assets/img/result.jpg',cap:'Real before -> after from our own system.',video:'kr4Sa8Yk_eA',videoTitle:'How AI Saved My Business (and Gave Me My Life Back)',
+  resources:[{t:'Interested? Get it for download',u:'#'}],done:'Your work finally looks as good as it is.'},
+];
+const EDGES=[['start','connect_hf'],['connect_hf','prep'],['prep','pickai'],['pickai','preserve'],['preserve','fixdistort'],['fixdistort','center'],['center','lens'],['lens','lighting'],['lighting','generate'],['generate','finish'],['finish','save_skill'],['save_skill','result'],
+ ['why_note','pickai','','explain'],['keystone_note','fixdistort','','explain'],['onepoint_note','center','','explain']];
+// Só 2 prompts: conectar no início e salvar a skill no fim. O meio é explicação da receita.
+const PROMPTS={
+ connect_hf:"Connect my Claude Code to my Higgsfield account: help me add my Higgsfield API key so you can generate and edit images, then confirm the connection works with a quick test. We're going to build ONE reusable skill that turns my work photos professional.",
+ save_skill:"Now save everything into ONE reusable skill in Claude Code called 'pro-photo'. When I send a photo and say 'pro-photo', it must run this exact image prompt on it with Higgsfield Seedream 5 Pro and export it at 1080x1350:\n\nKeep the EXACT same real space (same architecture, furniture, materials, colors and viewpoint; add or remove nothing). Turn it into a professional architectural photograph, editorial real-estate / Architectural Digest quality. Correct wide-angle and keystone distortion so every vertical is straight and plumb. Recompose centered and mirror-symmetric toward a centered vanishing point (one-point perspective), keeping the original viewpoint. Shot on a 50mm lens at eye level, no phone-snapshot look. Even soft lighting with gentle contact shadows, warm neutral white balance, crisp detail, filling the frame.\n\nFrom now on I just drop a photo and trigger the skill.",
+};
+const DIMS={terminal:[236,60],process:[250,84],decision:[190,190],explainer:[212,56]};
+function dim(n){return DIMS[n.type.split(' ')[0]]||DIMS.process;}
+const byId={},els={};NODES.forEach(n=>byId[n.id]=n);
+const canvas=document.getElementById('canvas'),svg=document.getElementById('edges');
+canvas.style.width=CANVAS_W+'px';canvas.style.height=CANVAS_H+'px';svg.setAttribute('width',CANVAS_W);svg.setAttribute('height',CANVAS_H);
+PHASES.forEach((p,i)=>{const nextY=(PHASES[i+1]?PHASES[i+1].y:CANVAS_H);const el=document.createElement('div');el.className='phase';el.style.top=p.y+'px';el.style.width=CANVAS_W+'px';el.style.height=(nextY-p.y)+'px';el.innerHTML=`<div class="pn">Phase</div><div class="pl">${p.label} &middot; ${p.name}</div>`;canvas.appendChild(el);});
+NODES.forEach(n=>{const el=document.createElement('div');el.className='node '+n.type;el.style.left=n.x+'px';el.style.top=n.y+'px';
+ const badge=n.type==='explainer'?'<div class="step qmark">?</div>':(n.step?`<div class="step">${n.step}</div>`:'');
+ const inner=n.type.startsWith('decision')?`<div class="inner">${badge}<div class="txt"><div class="nt">${n.title}</div><div class="more">click</div></div></div>`:`<div class="inner">${badge}<div class="nt">${n.title}</div>${(n.type.startsWith('process'))?`<div class="nd">${n.desc.slice(0,50)}…</div>`:''}<div class="more">click</div></div>`;
+ el.innerHTML=inner;el.onclick=()=>{if(!dragged)openDrawer(n.id);};canvas.appendChild(el);els[n.id]=el;});
+function anchor(n,s){const [w,h]=dim(n),hw=w/2,hh=h/2;return s==='top'?[n.x,n.y-hh]:s==='bottom'?[n.x,n.y+hh]:s==='left'?[n.x-hw,n.y]:[n.x+hw,n.y];}
+EDGES.forEach(e=>{const a=byId[e[0]],b=byId[e[1]],label=e[2],typ=e[3];
+ if(typ==='explain'){const L=a.x<b.x?a:b,R=a.x<b.x?b:a;const [x1,y1]=anchor(L,'right'),[x2,y2]=anchor(R,'left');
+  const pe=document.createElementNS('http://www.w3.org/2000/svg','path');pe.setAttribute('d',`M ${x1} ${y1} L ${x2} ${y2}`);pe.setAttribute('class','edge explain');svg.appendChild(pe);return;}
+ const [ax,ay]=anchor(a,'bottom'),[bx,by]=anchor(b,'top');let d;
+ if(Math.abs(ax-bx)<2)d=`M ${ax} ${ay} L ${bx} ${by}`;else{const my=(ay+by)/2;d=`M ${ax} ${ay} L ${ax} ${my} L ${bx} ${my} L ${bx} ${by}`;}
+ const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d',d);p.setAttribute('class','edge flow');p.setAttribute('marker-end','url(#arrow)');svg.appendChild(p);
+ if(label){const lx=(ax+bx)/2,ly=ay+20;const g=document.createElementNS('http://www.w3.org/2000/svg','g');const bg=document.createElementNS('http://www.w3.org/2000/svg','rect');bg.setAttribute('class','elabel-bg');bg.setAttribute('x',lx-24);bg.setAttribute('y',ly-14);bg.setAttribute('width',48);bg.setAttribute('height',20);bg.setAttribute('rx',4);const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',lx);t.setAttribute('y',ly);t.setAttribute('text-anchor','middle');t.setAttribute('dominant-baseline','middle');t.setAttribute('class','elabel');t.textContent=label;g.appendChild(bg);g.appendChild(t);svg.appendChild(g);}});
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function openDrawer(id){const n=byId[id];
+ document.getElementById('dwKick').textContent=n.step?('Step '+n.step):(n.type.startsWith('terminal')?'Milestone':n.type.startsWith('decision')?'Decision':n.type==='explainer'?'Concept explained':'Step');
+ document.getElementById('dwTitle').textContent=n.title;
+ let h='';
+ if(n.img)h+=`<div class="dw-heform"><img class="dw-hero" src="${n.img}" alt=""><span class="dw-zoom">&#8862; Expand</span></div>`;
+ if(n.cap)h+=`<div class="dw-cap">${n.cap}</div>`;
+ h+=`<div class="dw-in"><div class="dw-desc">${n.desc}</div>`;
+ const pr=PROMPTS[id];
+ if(pr){const isImg=IMG_NODES.has(id);h+=`<div class="dw-sec">${isImg?'Copy this into your image AI':'Copy &amp; paste this into your code agent'}</div><div class="tm"><div class="tm-bar"><div class="tm-dots"><i></i><i></i><i></i></div><div class="tm-title">${isImg?'AI image prompt (Higgsfield · Seedream)':'AI code agent'}</div><button class="tm-copy" type="button"><span class="tm-copy-txt">Copy</span></button></div><pre class="tm-body"><code>${esc(pr)}</code></pre></div>`;}
+ if(n.video)h+=`<div class="dw-sec">Watch (Bruno Ashford)</div><iframe class="dw-video" src="https://www.youtube.com/embed/${n.video}" title="${n.videoTitle||''}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe><div class="dw-vlabel"><svg viewBox="0 0 24 24"><path d="M23 12s0-4-.5-5.8a3 3 0 0 0-2.1-2.1C18.6 3.5 12 3.5 12 3.5s-6.6 0-8.4.6A3 3 0 0 0 1.5 6.2C1 8 1 12 1 12s0 4 .5 5.8a3 3 0 0 0 2.1 2.1c1.8.6 8.4.6 8.4.6s6.6 0 8.4-.6a3 3 0 0 0 2.1-2.1C23 16 23 12 23 12z"/><path fill="#120b06" d="M10 15.5l6-3.5-6-3.5z"/></svg>${n.videoTitle||'Watch on YouTube'}</div>`;
+ if(n.steps&&n.steps.length)h+=`<div class="dw-sec">Step by step</div><div class="dw-steps">${n.steps.map(s=>`<div>${s}</div>`).join('')}</div>`;
+ if(n.resources&&n.resources.length)h+=`<div class="dw-sec">Resources</div><div class="dw-links">${n.resources.map(l=>`<a class="dw-link" href="${l.u}" target="_blank">&rarr; ${l.t}</a>`).join('')}</div>`;
+ h+=`</div>`;
+ if(n.tip)h+=`<div class="dw-tip"><b>Pro tip:</b> ${n.tip}</div>`;
+ if(n.done)h+=`<div class="dw-done"><b>Done when:</b> ${n.done}</div>`;
+ document.getElementById('dwBody').innerHTML=h;document.getElementById('dwBody').scrollTop=0;
+ Object.values(els).forEach(el=>el.classList.remove('active'));if(els[id])els[id].classList.add('active');
+ document.getElementById('drawer').classList.add('open');}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');Object.values(els).forEach(el=>el.classList.remove('active'));}
+function openLB(src){document.getElementById('lbImg').src=src;document.getElementById('lightbox').classList.add('open');}
+function closeLB(){document.getElementById('lightbox').classList.remove('open');}
+document.addEventListener('click',function(e){var hero=e.target.closest('.dw-hero');if(hero){openLB(hero.src);return;}if(e.target.id==='lightbox'){closeLB();return;}});
+document.addEventListener('click',function(e){var b=e.target.closest('.tm-copy');if(!b)return;
+ var c=b.closest('.tm'),code=c.querySelector('.tm-body code')||c.querySelector('.tm-body'),t=b.querySelector('.tm-copy-txt');
+ function done(){b.classList.add('copied');if(t)t.textContent='Copied';setTimeout(function(){b.classList.remove('copied');if(t)t.textContent='Copy';},1600);}
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code.textContent).then(done).catch(function(){});}
+ else{var r=document.createRange();r.selectNodeContents(code);var s=window.getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy');done();}catch(err){}s.removeAllRanges();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(document.getElementById('lightbox').classList.contains('open')){closeLB();}else{closeDrawer();}return;}const STEP=90;
+ if(e.key==='ArrowUp'){ty+=STEP;apply();e.preventDefault();}else if(e.key==='ArrowDown'){ty-=STEP;apply();e.preventDefault();}
+ else if(e.key==='ArrowLeft'){tx+=STEP;apply();e.preventDefault();}else if(e.key==='ArrowRight'){tx-=STEP;apply();e.preventDefault();}
+ else if(e.key==='+'||e.key==='='){zoom(1.15);}else if(e.key==='-'||e.key==='_'){zoom(.87);}else if(e.key==='0'){resetView();}});
+let scale=1,tx=0,ty=0,dragging=false,dragged=false,sx,sy;const vp=document.getElementById('vp');
+function apply(){canvas.style.transform=`translate(${tx}px,${ty}px) scale(${scale})`;}
+function zoom(f){const ns=Math.min(1.8,Math.max(.28,scale*f)),cx=vp.clientWidth/2,cy=vp.clientHeight/2;tx=cx-(cx-tx)*(ns/scale);ty=cy-(cy-ty)*(ns/scale);scale=ns;apply();}
+vp.addEventListener('wheel',e=>{e.preventDefault();if(e.ctrlKey){const f=e.deltaY<0?1.08:.92,r=vp.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top,ns=Math.min(1.8,Math.max(.28,scale*f));tx=mx-(mx-tx)*(ns/scale);ty=my-(my-ty)*(ns/scale);scale=ns;apply();}else{tx-=e.deltaX;ty-=e.deltaY;apply();}},{passive:false});
+vp.addEventListener('mousedown',e=>{dragging=true;dragged=false;sx=e.clientX-tx;sy=e.clientY-ty;vp.classList.add('grabbing');});
+window.addEventListener('mousemove',e=>{if(!dragging)return;const nx=e.clientX-sx,ny=e.clientY-sy;if(Math.abs(nx-tx)>4||Math.abs(ny-ty)>4)dragged=true;tx=nx;ty=ny;apply();});
+window.addEventListener('mouseup',()=>{dragging=false;vp.classList.remove('grabbing');setTimeout(()=>dragged=false,30);});
+function resetView(){fitView();}
+function fitView(){const s=Math.min((vp.clientWidth-40)/CANVAS_W,(vp.clientHeight-110)/CANVAS_H);scale=Math.min(1,s);tx=(vp.clientWidth-CANVAS_W*scale)/2;ty=86;apply();}
+fitView();window.addEventListener('resize',fitView);
+const qp=new URLSearchParams(location.search);if(qp.get('open'))openDrawer(qp.get('open'));
+</script>
+</body></html>
