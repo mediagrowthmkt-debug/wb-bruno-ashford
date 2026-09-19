@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Build Business Reports with AI: Interactive Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+ *{margin:0;padding:0;box-sizing:border-box}
+ :root{--walnut:#120b06;--cream:#F3ECE0;--bronze:#C9A15C;--gold:#E7C98F;--muted:#b6a48c;--card:#1d140b;--line:rgba(201,161,92,.45);--edge:#8a6a34}
+ html,body{height:100%}
+ body{font-family:'Jost',sans-serif;background:var(--walnut);color:var(--cream);overflow:hidden;-webkit-font-smoothing:antialiased}
+ .bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 50% -4%, #2a1a0a 0%, var(--walnut) 55%),linear-gradient(rgba(201,161,92,.045) 1px, transparent 1px) 0 0/46px 46px,linear-gradient(90deg, rgba(201,161,92,.045) 1px, transparent 1px) 0 0/46px 46px}
+ header{position:fixed;top:0;left:0;width:100%;z-index:20;padding:15px 26px;display:flex;align-items:center;gap:14px;background:linear-gradient(180deg, rgba(18,11,6,.95), rgba(18,11,6,0));backdrop-filter:blur(4px)}
+ header .brand{display:flex;align-items:center;gap:12px}header .brand img{height:32px}
+ header .tt{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;line-height:1}
+ header .tt small{display:block;font-family:'Jost';font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--bronze);font-weight:500;margin-bottom:2px}
+ .cc-badge{font:600 11px 'Jost';letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,161,92,.5);padding:5px 12px;border-radius:999px;background:rgba(201,161,92,.12)}
+ .legend{margin-left:auto;display:flex;gap:14px;align-items:center;font-size:11px;color:var(--muted)}
+ .legend b{display:inline-flex;align-items:center;gap:6px;font-weight:400}
+ .lg{width:20px;height:13px;border:1.5px solid var(--bronze);background:var(--card)}
+ .lg.term{border-radius:9px}.lg.proc{border-radius:4px}.lg.dec{width:14px;height:14px;transform:rotate(45deg)}
+ .hint{font-size:11px;color:var(--gold);opacity:.8}
+ #vp{position:fixed;inset:0;z-index:1;cursor:grab;overflow:hidden}#vp.grabbing{cursor:grabbing}
+ #canvas{position:absolute;left:0;top:0;transform-origin:0 0}
+ svg.edges{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+ .edge{fill:none;stroke:var(--edge);stroke-width:2.2}
+ .edge.flow{stroke-dasharray:9 8;animation:dash 1.1s linear infinite}
+ @keyframes dash{to{stroke-dashoffset:-34}}
+ .elabel{fill:var(--gold);font-family:'Jost';font-size:13px;font-weight:500}.elabel-bg{fill:var(--walnut)}
+ .phase{position:absolute;left:0;border-top:1px dashed rgba(201,161,92,.22);z-index:1}
+ .phase .pl{position:absolute;left:20px;top:12px;font-family:'Cormorant Garamond',serif;font-size:30px;color:rgba(201,161,92,.4);font-weight:600}
+ .phase .pn{position:absolute;left:20px;top:2px;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(201,161,92,.5);font-weight:600}
+ .node{position:absolute;transform:translate(-50%,-50%);cursor:pointer;transition:transform .15s;z-index:3}
+ .node:hover{transform:translate(-50%,-50%) scale(1.04);z-index:5}
+ .node .inner{background:var(--card);border:1.6px solid var(--line);box-shadow:0 14px 30px rgba(0,0,0,.5);display:flex;flex-direction:column;justify-content:center;padding:13px 17px;position:relative}
+ .node:hover .inner{border-color:var(--gold);box-shadow:0 0 0 4px rgba(201,161,92,.12),0 16px 38px rgba(0,0,0,.55)}
+ .node.active{z-index:6}
+ .node.active .inner{border-color:var(--gold)!important;animation:glowPulse 2.1s ease-in-out infinite}
+ @keyframes glowPulse{0%,100%{box-shadow:0 0 0 3px rgba(231,201,143,.35),0 0 22px 3px rgba(201,161,92,.45),0 16px 38px rgba(0,0,0,.55)}50%{box-shadow:0 0 0 4px rgba(231,201,143,.6),0 0 44px 11px rgba(201,161,92,.72),0 16px 38px rgba(0,0,0,.55)}}
+ .node .step{position:absolute;top:-11px;left:-11px;width:28px;height:28px;border-radius:50%;background:linear-gradient(180deg,var(--gold),var(--bronze));color:var(--walnut);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(0,0,0,.5)}
+ .node .nt{font-size:16px;font-weight:600;color:var(--cream);line-height:1.15}
+ .node .nd{font-size:12px;color:var(--muted);font-weight:300;margin-top:3px;line-height:1.25}
+ .node .more{position:absolute;bottom:7px;right:11px;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--bronze);opacity:.7}
+ .node.process .inner{width:250px;min-height:84px;border-radius:14px}
+ .node.area .inner{width:210px;min-height:60px;border-radius:12px;border-color:rgba(201,161,92,.35)}
+ .node.area .nt{font-size:15px}
+ .node.terminal .inner{width:230px;min-height:60px;border-radius:32px;align-items:center;text-align:center;background:linear-gradient(160deg,#2a1c0b,#1a1108)}
+ .node.terminal.gold .inner{background:linear-gradient(160deg,#4a3512,#2a1c0b);border-color:var(--gold)}
+ .node.terminal .nt{font-family:'Cormorant Garamond',serif;font-size:22px}
+ .node.decision .inner{width:186px;height:186px;transform:rotate(45deg);border-radius:16px;align-items:center;text-align:center;padding:0}
+ .node.decision .txt{transform:rotate(-45deg);width:150px}.node.decision .nt{font-size:15px}
+ .node.decision .step{transform:rotate(-45deg);top:4px;left:4px}.node.decision .more{transform:rotate(-45deg);bottom:24px;right:24px}
+ .node.explainer .inner{width:212px;min-height:56px;border-radius:12px;border-style:dashed;border-color:rgba(201,161,92,.5);background:rgba(29,20,11,.55)}
+ .node.explainer .nt{font-size:14px;color:var(--gold);font-weight:500}
+ .node.explainer .more{color:var(--muted)}
+ .step.qmark{background:linear-gradient(180deg,#3a2a12,#241708)!important;color:var(--gold)!important;border:1px solid var(--bronze);font-size:15px}
+ .edge.explain{stroke:rgba(201,161,92,.42);stroke-width:1.5;stroke-dasharray:4 5;animation:none}
+ #drawer{position:fixed;top:0;right:0;height:100%;width:430px;max-width:92vw;z-index:30;background:linear-gradient(180deg,#1d140b,#14100a);border-left:1px solid var(--line);box-shadow:-20px 0 60px rgba(0,0,0,.6);transform:translateX(100%);transition:transform .32s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+ #drawer.open{transform:translateX(0)}
+ .dw-head{padding:24px 26px 16px;border-bottom:1px solid rgba(201,161,92,.2);position:relative}
+ .dw-kick{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--bronze);font-weight:600}
+ .dw-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:var(--cream);line-height:1.05;margin-top:8px}
+ .dw-close{position:absolute;top:18px;right:22px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--cream);font-size:18px;cursor:pointer}
+ .dw-close:hover{background:rgba(201,161,92,.15)}
+ .dw-body{padding:0 0 40px;overflow-y:auto;flex:1}
+ .dw-hero{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;border-bottom:1px solid rgba(201,161,92,.2);cursor:zoom-in;position:relative}
+ .dw-heform{position:relative}
+ .dw-zoom{position:absolute;top:10px;right:10px;z-index:2;background:rgba(13,11,8,.75);border:1px solid rgba(201,161,92,.4);color:var(--gold);border-radius:8px;padding:4px 9px;font:600 10px 'Jost';letter-spacing:.5px;text-transform:uppercase;pointer-events:none}
+ .lb{position:fixed;inset:0;z-index:60;background:rgba(8,5,3,.93);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:44px;cursor:zoom-out}
+ .lb.open{display:flex}
+ .lb-img{max-width:96vw;max-height:92vh;border-radius:10px;box-shadow:0 30px 80px rgba(0,0,0,.7);border:1px solid rgba(201,161,92,.3)}
+ .lb-x{position:fixed;top:22px;right:26px;width:46px;height:46px;border-radius:50%;border:1px solid rgba(201,161,92,.45);background:rgba(20,15,11,.85);color:var(--cream);font-size:26px;line-height:1;cursor:pointer;z-index:61}
+ .lb-x:hover{background:rgba(201,161,92,.22);border-color:var(--gold)}
+ .dw-cap{font-size:11px;color:var(--muted);padding:7px 26px 0;font-style:italic}
+ .dw-in{padding:18px 26px 0}
+ .dw-desc{font-size:16px;line-height:1.55;color:#e2d6c5;font-weight:300}
+ .dw-video{width:100%;aspect-ratio:16/9;border:0;display:block;border-radius:12px;margin-top:11px;background:#000}
+ .dw-vlabel{font-size:12.5px;color:var(--gold);margin-top:8px;display:flex;align-items:center;gap:7px}
+ .dw-vlabel svg{width:16px;height:16px;fill:#ff3b30}
+ .tm{border-radius:12px;overflow:hidden;border:1px solid rgba(201,161,92,.22);background:#0d0b08;box-shadow:0 14px 34px rgba(0,0,0,.45);margin-top:11px}
+ .tm-bar{display:flex;align-items:center;gap:.6rem;padding:8px 11px;background:#1b1510;border-bottom:1px solid rgba(201,161,92,.14)}
+ .tm-dots{display:flex;gap:6px}.tm-dots i{width:11px;height:11px;border-radius:50%;display:block}
+ .tm-dots i:nth-child(1){background:#ff5f57}.tm-dots i:nth-child(2){background:#febc2e}.tm-dots i:nth-child(3){background:#28c840}
+ .tm-title{font:500 12px ui-monospace,Menlo,monospace;color:rgba(243,236,224,.5)}
+ .tm-copy{margin-left:auto;display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(201,161,92,.3);background:rgba(201,161,92,.08);color:var(--gold);border-radius:8px;padding:4px 10px;font:600 11px 'Jost';cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+ .tm-copy:hover{background:rgba(231,201,143,.18);border-color:var(--gold)}
+ .tm-copy.copied{background:#28c840;border-color:#28c840;color:#08210c}
+ .tm-body{margin:0;padding:13px 14px;font:400 13px/1.6 ui-monospace,Menlo,monospace;color:#e8e2d6;white-space:pre-wrap;word-break:break-word}
+ .tm-body code{font:inherit;color:inherit}
+ .dw-sec{margin-top:22px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--bronze);font-weight:600}
+ .dw-steps{margin-top:11px;counter-reset:s;display:flex;flex-direction:column;gap:9px}
+ .dw-steps div{font-size:14.5px;color:#d9ccb8;font-weight:300;padding-left:34px;position:relative;line-height:1.4}
+ .dw-steps div:before{counter-increment:s;content:counter(s);position:absolute;left:0;top:-1px;width:23px;height:23px;border-radius:50%;background:rgba(201,161,92,.14);border:1px solid var(--bronze);color:var(--gold);font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:600}
+ .dw-ex{margin-top:11px;display:flex;flex-direction:column;gap:8px}
+ .dw-ex div{font-size:14px;color:#e2d6c5;font-weight:300;padding:9px 13px;position:relative;line-height:1.4;background:rgba(201,161,92,.06);border-radius:8px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+ .tagf{font:600 9px 'Jost';letter-spacing:.5px;text-transform:uppercase;padding:3px 8px;border-radius:999px;white-space:nowrap}
+ .tagf.free{color:#9ecb7e;background:rgba(120,170,90,.14);border:1px solid rgba(120,170,90,.4)}
+ .tagf.paid{color:var(--gold);background:rgba(201,161,92,.14);border:1px solid rgba(201,161,92,.45)}
+ .tagf.yours{color:var(--muted);background:rgba(243,236,224,.06);border:1px solid rgba(243,236,224,.2)}
+ .dw-links{margin-top:11px;display:flex;flex-direction:column;gap:9px}
+ .dw-link{display:flex;gap:9px;padding:11px 14px;border-radius:10px;background:rgba(201,161,92,.09);border-left:3px solid var(--bronze);color:var(--gold);text-decoration:none;font-size:13.5px}
+ .dw-link:hover{background:rgba(201,161,92,.16)}
+ .dw-tip{margin:18px 26px 0;padding:13px 16px;border-radius:10px;background:rgba(201,161,92,.1);border-left:3px solid var(--gold);font-size:14px;color:#e9dcc6;line-height:1.45}
+ .dw-tip b{color:var(--gold);font-weight:600}
+ .dw-done{margin:14px 26px 0;padding:13px 16px;border-radius:10px;background:rgba(120,170,90,.1);border-left:3px solid #7bab5a;font-size:14px;color:#cfe0be}
+ .dw-done b{color:#9ecb7e;font-weight:600}
+ .zoom{position:fixed;bottom:20px;left:20px;z-index:20;display:flex;gap:8px}
+ .zoom button{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:rgba(29,20,11,.9);color:var(--cream);font-size:19px;cursor:pointer}
+ .zoom button:hover{border-color:var(--gold);color:var(--gold)}
+ .foot{position:fixed;bottom:22px;right:22px;z-index:20;font-size:11px;letter-spacing:2px;color:var(--gold);opacity:.7}
+</style></head>
+<body>
+<div class="bg"></div>
+<header><div class="brand"><img src="logo-bronze.png" alt="Bruno Ashford"><div class="tt"><small>Bruno Ashford · Interactive Playbook</small>How to Build Business Reports with AI</div><span class="cc-badge">Built with Claude Code</span></div>
+<div class="legend"><b><span class="lg term"></span>Start / End</b><b><span class="lg proc"></span>Step</b><b><span class="lg dec"></span>Decision</b><span class="hint">Click a node · two-finger scroll or arrows to move · pinch or +/- to zoom</span></div></header>
+<div id="vp"><div id="canvas"><svg class="edges" id="edges"><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#b0863f"></path></marker></defs></svg></div></div>
+<aside id="drawer"><div class="dw-head"><div class="dw-kick" id="dwKick"></div><div class="dw-title" id="dwTitle"></div><button class="dw-close" onclick="closeDrawer()">&times;</button></div><div class="dw-body" id="dwBody"></div></aside>
+<div class="zoom"><button onclick="zoom(1.15)">+</button><button onclick="zoom(.87)">&minus;</button><button onclick="resetView()">&#8862;</button></div>
+<div class="foot">brunoashford.com</div>
+<div class="lb" id="lightbox"><button class="lb-x" type="button" onclick="closeLB()">&times;</button><img class="lb-img" id="lbImg" src="" alt=""></div>
+<script>
+const CANVAS_W=1520, CANVAS_H=2520;
+const PHASES=[{y:20,label:'01',name:'Start with the database'},{y:560,label:'02',name:'Connect your tools (API)'},{y:1240,label:'03',name:'Host it'},{y:1450,label:'04',name:'Automate the pull'},{y:1820,label:'05',name:'Build the report'},{y:2210,label:'06',name:'Result'}];
+const NODES=[
+ {id:'start',type:'terminal',x:760,y:90,title:'You + Claude Code',
+  desc:'Everything here is built in Claude Code, no dev team. You describe the reports you wish you had, and Claude builds them.',
+  steps:['Open Claude Code','Describe the numbers you want to track','Let it plan the data model'],
+  tip:'You are the strategist, Claude Code is the builder. Say it in plain English.',
+  img:'assets/img/start.jpg',cap:'It all starts in Claude Code.',video:'eMUxtepjp4g',videoTitle:'How to Set Up AI Agents on Your Computer (No Code, Step by Step)',done:'Claude understands what you want to measure.'},
+
+ {id:'database',type:'process',step:1,x:760,y:250,title:'Build the database first',
+  desc:'Before any chart, build the database. It is the single source of truth every report reads from. This always comes first.',
+  steps:['Ask Claude Code to create the database','Choose where it lives (a server you own)','Start empty, structured and clean'],
+  tip:'No database, no reliable reports. Resist starting with the dashboard.',
+  img:'assets/img/database.jpg',cap:'The database behind my agency report (this is the real thing).',video:'_L9s1d0FS2I',videoTitle:'I Built the AI System That Runs My Entire Company',done:'You have an empty, structured database.'},
+
+ {id:'columns',type:'process',step:2,x:760,y:410,title:'Design each column',
+  desc:'Define every metric you want to see, column by column, with Claude Code: revenue, leads, cost per lead, rankings, whatever drives your decisions.',
+  steps:['List the numbers you actually decide with','Have Claude create a column for each','Set the type: money, count, percent'],
+  tip:'Only track what changes a decision. Vanity metrics just add noise.',
+  img:'assets/img/columns.jpg',cap:'Each metric becomes a column (my agency database).',done:'Every metric you care about has a column.'},
+
+ {id:'connect',type:'decision',step:3,x:760,y:660,title:'Which data sources?',
+  desc:'Now feed the database. Each tool you use becomes a data source you connect by API. Some are free, some paid: connect only what you use, and add more over time.',
+  steps:['List the tools you already use','For each, open the platform and get its API access','Connect it to the database in Claude Code'],
+  tip:'This is the real integration: go into each platform, grab the API key, and connect it. The examples around this node are just some of what you can plug in.',
+  img:'assets/img/connect.jpg',cap:'Every tool plugs into the database by API.',done:'You know which sources to connect.'},
+
+ {id:'crm',type:'area',x:150,y:900,title:'CRM',desc:'Your pipeline and revenue truth: deals, contacts, closed revenue.',
+  examples:[['GoHighLevel','paid']],tip:'Where closed revenue and opportunities live.',img:'assets/img/crm.jpg',cap:'CRM: sales and revenue.',done:'CRM connected.'},
+ {id:'paid',type:'area',x:400,y:900,title:'Paid Ads',desc:'Spend, ROAS and cost per lead from your ad accounts.',
+  examples:[['Google Ads','free'],['Meta Ads','free']],tip:'Both have free APIs; you just authorize access.',img:'assets/img/paid.jpg',cap:'Paid traffic performance.',done:'Ad accounts connected.'},
+ {id:'web',type:'area',x:650,y:900,title:'Web analytics',desc:'Traffic, behavior and search performance of your site.',
+  examples:[['Google Analytics 4','free'],['Google Search Console','free']],tip:'Free Google APIs; connect once with OAuth.',img:'assets/img/web.jpg',cap:'Site traffic and search.',done:'Web analytics connected.'},
+ {id:'seo',type:'area',x:900,y:900,title:'SEO & Local',desc:'Rankings, keyword volume, local visibility and competitors.',
+  examples:[['Reportei','paid'],['Local Falcon','paid'],['Keyword Planner','free'],['Serper','paid']],tip:'Mix of free and paid; add the ones you actually use.',img:'assets/img/seo.jpg',cap:'SEO and local ranking.',done:'SEO sources connected.'},
+ {id:'social',type:'area',x:1150,y:900,title:'Social & Content',desc:'Followers, your content calendar and what you delivered.',
+  examples:[['Live followers','free'],['Content calendar','yours'],['Deliverables & materials','yours']],tip:'Some of this is your own data, not an external API.',img:'assets/img/social.jpg',cap:'Social and content output.',done:'Social & content connected.'},
+ {id:'tech',type:'area',x:1400,y:900,title:'Technical SEO',desc:'The health of your website behind the scenes.',
+  examples:[['On-page audit','free'],['Backlinks & authority','varies'],['Local citations / NAP','free'],['Structured data / Schema','free'],['PageSpeed / Core Web Vitals','free']],tip:'Mostly free checks; great early wins.',img:'assets/img/tech.jpg',cap:'Technical site health.',done:'Technical SEO connected.'},
+
+ {id:'integrate',type:'process',step:4,x:760,y:1120,title:'Plug each API into the database',
+  desc:'For every source, go into the platform, create or copy the API key, and connect it in Claude Code. That link is what pulls the numbers in.',
+  steps:['Log into each platform','Create or copy the API key','Paste it into your Claude Code integration','Test the first sync'],
+  tip:'A green "synced" means the pipe works. That is the integration done.',
+  img:'assets/img/integrate.jpg',cap:'Green "synced" in my platform: the API pipes working.',video:'z2DXb9m6ul4',videoTitle:'How I Automate Google Ads & SEO Using AI Agents + Claude Code',done:'Each source shows "synced".'},
+
+ {id:'server',type:'process',step:5,x:760,y:1320,title:'Get a server to host it',
+  desc:'Your database and reports need to live online, 24/7. That is a paid server (a VPS). I use mine; you can use any provider.',
+  steps:['Get a VPS (paid, low cost to start)','Have Claude deploy the database + app there','Keep backups'],
+  tip:'This is the one recurring cost. A small VPS is enough to begin.',
+  img:'assets/img/server.jpg',cap:'The data lives on a server you control.',done:'Everything runs on your own server.'},
+
+ {id:'autopull',type:'process',step:6,x:760,y:1530,title:'Build the auto-pull',
+  desc:'Claude Code writes the automation that goes out to every connected API and pulls the fresh numbers into your database, no copy-paste.',
+  steps:['Ask Claude Code to build the sync','Map each API to its columns','Run it once to backfill history'],
+  tip:'This is the magic: the data updates itself, not you.',
+  img:'assets/img/autopull.jpg',cap:'The AI pulls the data for you.',video:'RWPLEpve768',videoTitle:'Claude Code Tutorial: Automate Your Business With AI Agents',done:'Data flows in automatically.'},
+
+ {id:'schedule',type:'process',step:7,x:760,y:1700,title:'Schedule it in Claude Code',
+  desc:'Tell Claude Code to refresh every morning, so when you open your computer the numbers are already updated. Configure this in Claude Code first.',
+  steps:['Set a daily schedule','Point it at the sync you built','Open your laptop to fresh data'],
+  tip:'Ask Claude to run it every morning when you start your computer.',
+  img:'assets/img/schedule.jpg',cap:'Fresh numbers before your first coffee.',done:'Reports refresh on their own.'},
+
+ {id:'dashboard',type:'process',step:8,x:760,y:1920,title:'Build your dashboard',
+  desc:'Now the visual report on top of the database, the part you actually look at. This is exactly how my agency report works.',
+  steps:['Ask Claude Code to build the dashboard','Pick the views: summary, sales, SEO, ads','Publish it behind a login'],
+  tip:'Build the database once; you can spin up many reports on top of it.',
+  img:'assets/img/dashboard.jpg',cap:'My live agency dashboard (Claude Code).',video:'edmAECbA7OQ',videoTitle:'How Companies Are Actually Using AI in 2026 (Real Examples)',
+  resources:[{t:'See my live agency report',u:'https://reports.mediagrowth.com.br/app.html'}],done:'You have a live dashboard.'},
+
+ {id:'yours',type:'process',step:9,x:760,y:2080,title:'Make it yours',
+  desc:'I built mine to track all commercial and marketing in one place. You build yours with the data YOU want to see, and you can create other reports too, all with Claude Code.',
+  steps:['Decide what you need to see','Build that report','Add more reports as you grow'],
+  tip:'Your report should answer your questions, not copy mine.',
+  img:'assets/img/yours.jpg',cap:'One database, many reports.',done:'The report fits your business.'},
+
+ {id:'db_note',type:'explainer',x:360,y:250,title:'What is a database?',
+  desc:'Think of it as one organized spreadsheet in the cloud that every report reads from. Instead of numbers scattered across 15 tools, they all live in one consistent place.',
+  tip:'You do not need to be technical: Claude Code builds and manages it for you.',done:'You get why the database comes first.'},
+ {id:'api_note',type:'explainer',x:355,y:660,title:'What is an API?',
+  desc:'An API is the official door a platform opens so other software can read its data. Connecting by API means your system pulls the numbers straight from the source, automatically, instead of you exporting spreadsheets.',
+  tip:'Most platforms give you an API key in their settings. That key is the door.',done:'You understand how tools share data.'},
+ {id:'integ_note',type:'explainer',x:1170,y:1120,title:'What is an integration?',
+  desc:'An integration is the wire between a platform and your database. Once connected, the data flows on its own; "synced" means the wire is live.',
+  tip:'Set it up once, and it keeps working every day.',done:'You know what "synced" really means.'},
+ {id:'server_note',type:'explainer',x:1165,y:1320,title:'What is a VPS (server)?',
+  desc:'A VPS is a small computer you rent in the cloud that stays on 24/7. Your database and reports live there, so they are always up to date and available, even when your laptop is closed.',
+  tip:'A small, low-cost VPS is enough to start.',done:'You know where your system lives.'},
+ {id:'auto_note',type:'explainer',x:350,y:1530,title:'What is an automation?',
+  desc:'An automation is a task that runs by itself on a schedule. Here it is the job that goes out to every platform and refreshes your numbers, so you never copy-paste data again.',
+  tip:'Ask Claude Code to run it every morning.',done:'You see how the data updates itself.'},
+
+ {id:'result',type:'terminal gold',x:760,y:2300,title:'Your whole business, one place',
+  desc:'Commercial and marketing, together, updated on their own. You open your laptop and the whole picture is already there.',
+  steps:['One source of truth','Updated every morning','Decisions backed by real data'],
+  tip:'Want mine as a starting point? If you are interested, I can share it for download.',
+  img:'assets/img/result.jpg',cap:'Run your business on live data.',video:'kr4Sa8Yk_eA',videoTitle:'How AI Saved My Business (and Gave Me My Life Back)',
+  resources:[{t:'Interested? Get it for download',u:'#'}],done:'You run your business on live data.'},
+];
+const EDGES=[['start','database'],['database','columns'],['columns','connect'],
+ ['connect','crm'],['connect','paid'],['connect','web'],['connect','seo'],['connect','social'],['connect','tech'],
+ ['crm','integrate'],['paid','integrate'],['web','integrate'],['seo','integrate'],['social','integrate'],['tech','integrate'],
+ ['integrate','server'],['server','autopull'],['autopull','schedule'],['schedule','dashboard'],['dashboard','yours'],['yours','result'],
+ ['db_note','database','','explain'],['api_note','connect','','explain'],['integ_note','integrate','','explain'],['server_note','server','','explain'],['auto_note','autopull','','explain']];
+// Prompts em SEQUENCIA (cada um continua o anterior, mesma conversa no Claude Code); tom variado, natural.
+const PROMPTS={
+ start:"I run a [describe your business] and I want to build my own reporting system with you, from scratch. Start by interviewing me: what decisions do I make each week, and which numbers would actually change them? Then propose what we should build.",
+ database:"Good. Now set up the database that will be the single source of truth for everything we track. Propose a clean structure for a business like mine and explain your choices as you go.",
+ columns:"Now let's define the columns. Based on what I told you, list the metrics worth tracking for my business, flag the ones most people forget, and create a column for each with the right type.",
+ connect:"Next, the data sources. Look at the tools I use, tell me which ones are worth wiring in first for the biggest payoff, and lay out the order we'll connect them.",
+ crm:"Start with the CRM. Recommend the best fit for my sales process, then walk me through creating the API key and connecting it so deals and revenue flow in.",
+ paid:"Now the ad platforms. Tell me which ones my business actually needs, then connect them and pull in spend, ROAS and cost per lead.",
+ web:"Add web analytics next. Wire up GA4 and Search Console (or a better fit for me) and pull traffic, conversions and search performance.",
+ seo:"Now the SEO and local layer. Advise which tools are worth it for my market, then connect the ones we pick for rankings and local visibility.",
+ social:"Bring in social and content: follower counts, my content calendar and deliverables, so I can see output next to results.",
+ tech:"Add the technical SEO checks. Prioritize the ones that move the needle for my site, then run them and store the results.",
+ integrate:"Now connect everything for real. For each platform, find the API key with me, wire it in, run a test sync, and fix anything that doesn't come back green.",
+ server:"Let's put this online. Recommend a low-cost server for my case, deploy the database and app there, and set up backups.",
+ autopull:"Now automate the data. Build the job that pulls fresh numbers from every connected source into the database, and run it once to backfill my history.",
+ schedule:"Make it run on its own. Schedule the sync every morning so my numbers are ready when I open my laptop, and confirm it's live.",
+ dashboard:"Now build the dashboard on top of all this. Design the views I need at a glance for my business, and publish it behind a login.",
+ yours:"This report is built for my agency. Now spin up the other reports I need for my business, on the same database, and tell me which ones matter most.",
+ result:"Finally, act as my advisor: review everything we built and tell me the single next metric or report that would move my business forward.",
+};
+
+const DIMS={terminal:[230,60],process:[250,84],decision:[186,186],area:[210,60],explainer:[212,56]};
+function dim(n){return DIMS[n.type.split(' ')[0]]||DIMS.process;}
+const byId={},els={};NODES.forEach(n=>byId[n.id]=n);
+const canvas=document.getElementById('canvas'),svg=document.getElementById('edges');
+canvas.style.width=CANVAS_W+'px';canvas.style.height=CANVAS_H+'px';svg.setAttribute('width',CANVAS_W);svg.setAttribute('height',CANVAS_H);
+PHASES.forEach((p,i)=>{const nextY=(PHASES[i+1]?PHASES[i+1].y:CANVAS_H);const el=document.createElement('div');el.className='phase';el.style.top=p.y+'px';el.style.width=CANVAS_W+'px';el.style.height=(nextY-p.y)+'px';el.innerHTML=`<div class="pn">Phase</div><div class="pl">${p.label} &middot; ${p.name}</div>`;canvas.appendChild(el);});
+NODES.forEach(n=>{const el=document.createElement('div');el.className='node '+n.type;el.style.left=n.x+'px';el.style.top=n.y+'px';
+ const badge=n.type==='explainer'?'<div class="step qmark">?</div>':(n.step?`<div class="step">${n.step}</div>`:'');
+ const inner=n.type.startsWith('decision')?`<div class="inner">${badge}<div class="txt"><div class="nt">${n.title}</div><div class="more">click</div></div></div>`:`<div class="inner">${badge}<div class="nt">${n.title}</div>${(n.type.startsWith('process'))?`<div class="nd">${n.desc.slice(0,50)}…</div>`:''}<div class="more">click</div></div>`;
+ el.innerHTML=inner;el.onclick=()=>{if(!dragged)openDrawer(n.id);};canvas.appendChild(el);els[n.id]=el;});
+function anchor(n,s){const [w,h]=dim(n),hw=w/2,hh=h/2;return s==='top'?[n.x,n.y-hh]:s==='bottom'?[n.x,n.y+hh]:s==='left'?[n.x-hw,n.y]:[n.x+hw,n.y];}
+EDGES.forEach(e=>{const a=byId[e[0]],b=byId[e[1]],label=e[2],typ=e[3];
+ if(typ==='explain'){const L=a.x<b.x?a:b,R=a.x<b.x?b:a;const [x1,y1]=anchor(L,'right'),[x2,y2]=anchor(R,'left');
+  const pe=document.createElementNS('http://www.w3.org/2000/svg','path');pe.setAttribute('d',`M ${x1} ${y1} L ${x2} ${y2}`);pe.setAttribute('class','edge explain');svg.appendChild(pe);return;}
+ const loop=typ==='loop';let d,lx,ly;
+ if(loop){const [ax,ay]=anchor(a,'right'),[bx,by]=anchor(b,'right');const ext=Math.max(ax,bx,CANVAS_W-90);d=`M ${ax} ${ay} L ${ext} ${ay} L ${ext} ${by} L ${bx} ${by}`;lx=ext;ly=(ay+by)/2;}
+ else{const [ax,ay]=anchor(a,'bottom');let bs='top';const [bx,by]=anchor(b,bs);
+  if(Math.abs(ax-bx)<2)d=`M ${ax} ${ay} L ${bx} ${by}`;else{const my=(ay+by)/2;d=`M ${ax} ${ay} L ${ax} ${my} L ${bx} ${my} L ${bx} ${by}`;}lx=(ax+bx)/2;ly=ay+20;}
+ const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d',d);p.setAttribute('class','edge flow');p.setAttribute('marker-end','url(#arrow)');svg.appendChild(p);
+ if(label){const g=document.createElementNS('http://www.w3.org/2000/svg','g');const bg=document.createElementNS('http://www.w3.org/2000/svg','rect');bg.setAttribute('class','elabel-bg');bg.setAttribute('x',lx-24);bg.setAttribute('y',ly-14);bg.setAttribute('width',48);bg.setAttribute('height',20);bg.setAttribute('rx',4);const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',lx);t.setAttribute('y',ly);t.setAttribute('text-anchor','middle');t.setAttribute('dominant-baseline','middle');t.setAttribute('class','elabel');t.textContent=label;g.appendChild(bg);g.appendChild(t);svg.appendChild(g);}});
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function openDrawer(id){const n=byId[id];
+ document.getElementById('dwKick').textContent=n.step?('Step '+n.step):(n.type.startsWith('terminal')?'Milestone':n.type.startsWith('decision')?'Decision':n.type==='explainer'?'Concept explained':'Data source');
+ document.getElementById('dwTitle').textContent=n.title;
+ let h='';
+ if(n.img)h+=`<div class="dw-heform"><img class="dw-hero" src="${n.img}" alt=""><span class="dw-zoom">&#8862; Expand</span></div>`;
+ if(n.cap)h+=`<div class="dw-cap">${n.cap}</div>`;
+ h+=`<div class="dw-in"><div class="dw-desc">${n.desc}</div>`;
+ const pr=PROMPTS[id];
+ if(pr)h+=`<div class="dw-sec">Copy &amp; paste this prompt into your code agent</div><div class="tm"><div class="tm-bar"><div class="tm-dots"><i></i><i></i><i></i></div><div class="tm-title">AI code agent</div><button class="tm-copy" type="button"><span class="tm-copy-txt">Copy</span></button></div><pre class="tm-body"><code>${esc(pr)}</code></pre></div>`;
+ if(n.video)h+=`<div class="dw-sec">Watch (Bruno Ashford)</div><iframe class="dw-video" src="https://www.youtube.com/embed/${n.video}" title="${n.videoTitle||''}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe><div class="dw-vlabel"><svg viewBox="0 0 24 24"><path d="M23 12s0-4-.5-5.8a3 3 0 0 0-2.1-2.1C18.6 3.5 12 3.5 12 3.5s-6.6 0-8.4.6A3 3 0 0 0 1.5 6.2C1 8 1 12 1 12s0 4 .5 5.8a3 3 0 0 0 2.1 2.1c1.8.6 8.4.6 8.4.6s6.6 0 8.4-.6a3 3 0 0 0 2.1-2.1C23 16 23 12 23 12z"/><path fill="#120b06" d="M10 15.5l6-3.5-6-3.5z"/></svg>${n.videoTitle||'Watch on YouTube'}</div>`;
+ if(n.steps&&n.steps.length)h+=`<div class="dw-sec">Step by step</div><div class="dw-steps">${n.steps.map(s=>`<div>${s}</div>`).join('')}</div>`;
+ if(n.examples&&n.examples.length)h+=`<div class="dw-sec">Examples you can connect</div><div class="dw-ex">${n.examples.map(x=>`<div><span>${x[0]}</span><span class="tagf ${x[1]}">${x[1]==='yours'?'your data':x[1]}</span></div>`).join('')}</div>`;
+ if(n.resources&&n.resources.length)h+=`<div class="dw-sec">Resources</div><div class="dw-links">${n.resources.map(l=>`<a class="dw-link" href="${l.u}" target="_blank">&rarr; ${l.t}</a>`).join('')}</div>`;
+ h+=`</div>`;
+ if(n.tip)h+=`<div class="dw-tip"><b>Pro tip:</b> ${n.tip}</div>`;
+ if(n.done)h+=`<div class="dw-done"><b>Done when:</b> ${n.done}</div>`;
+ document.getElementById('dwBody').innerHTML=h;document.getElementById('dwBody').scrollTop=0;
+ Object.values(els).forEach(el=>el.classList.remove('active'));if(els[id])els[id].classList.add('active');
+ document.getElementById('drawer').classList.add('open');}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');Object.values(els).forEach(el=>el.classList.remove('active'));}
+function openLB(src){document.getElementById('lbImg').src=src;document.getElementById('lightbox').classList.add('open');}
+function closeLB(){document.getElementById('lightbox').classList.remove('open');}
+document.addEventListener('click',function(e){
+ var hero=e.target.closest('.dw-hero');if(hero){openLB(hero.src);return;}
+ if(e.target.id==='lightbox'){closeLB();return;}
+});
+document.addEventListener('click',function(e){var b=e.target.closest('.tm-copy');if(!b)return;
+ var c=b.closest('.tm'),code=c.querySelector('.tm-body code')||c.querySelector('.tm-body'),t=b.querySelector('.tm-copy-txt');
+ function done(){b.classList.add('copied');if(t)t.textContent='Copied';setTimeout(function(){b.classList.remove('copied');if(t)t.textContent='Copy';},1600);}
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code.textContent).then(done).catch(function(){});}
+ else{var r=document.createRange();r.selectNodeContents(code);var s=window.getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy');done();}catch(err){}s.removeAllRanges();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(document.getElementById('lightbox').classList.contains('open')){closeLB();}else{closeDrawer();}return;}const STEP=90;
+ if(e.key==='ArrowUp'){ty+=STEP;apply();e.preventDefault();}else if(e.key==='ArrowDown'){ty-=STEP;apply();e.preventDefault();}
+ else if(e.key==='ArrowLeft'){tx+=STEP;apply();e.preventDefault();}else if(e.key==='ArrowRight'){tx-=STEP;apply();e.preventDefault();}
+ else if(e.key==='+'||e.key==='='){zoom(1.15);}else if(e.key==='-'||e.key==='_'){zoom(.87);}else if(e.key==='0'){resetView();}});
+let scale=1,tx=0,ty=0,dragging=false,dragged=false,sx,sy;const vp=document.getElementById('vp');
+function apply(){canvas.style.transform=`translate(${tx}px,${ty}px) scale(${scale})`;}
+function zoom(f){const ns=Math.min(1.8,Math.max(.28,scale*f)),cx=vp.clientWidth/2,cy=vp.clientHeight/2;tx=cx-(cx-tx)*(ns/scale);ty=cy-(cy-ty)*(ns/scale);scale=ns;apply();}
+vp.addEventListener('wheel',e=>{e.preventDefault();if(e.ctrlKey){const f=e.deltaY<0?1.08:.92,r=vp.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top,ns=Math.min(1.8,Math.max(.28,scale*f));tx=mx-(mx-tx)*(ns/scale);ty=my-(my-ty)*(ns/scale);scale=ns;apply();}else{tx-=e.deltaX;ty-=e.deltaY;apply();}},{passive:false});
+vp.addEventListener('mousedown',e=>{dragging=true;dragged=false;sx=e.clientX-tx;sy=e.clientY-ty;vp.classList.add('grabbing');});
+window.addEventListener('mousemove',e=>{if(!dragging)return;const nx=e.clientX-sx,ny=e.clientY-sy;if(Math.abs(nx-tx)>4||Math.abs(ny-ty)>4)dragged=true;tx=nx;ty=ny;apply();});
+window.addEventListener('mouseup',()=>{dragging=false;vp.classList.remove('grabbing');setTimeout(()=>dragged=false,30);});
+function resetView(){fitView();}
+function fitView(){const s=Math.min((vp.clientWidth-40)/CANVAS_W,(vp.clientHeight-110)/CANVAS_H);scale=Math.min(1,s);tx=(vp.clientWidth-CANVAS_W*scale)/2;ty=86;apply();}
+fitView();window.addEventListener('resize',fitView);
+const qp=new URLSearchParams(location.search);if(qp.get('open'))openDrawer(qp.get('open'));
+</script>
+</body></html>
