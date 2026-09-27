@@ -1,0 +1,15 @@
+Playbook,Task,Owner,Times per week,Minutes per time BEFORE AI,Hours per week BEFORE (=times x minutes / 60),Minutes per time AFTER AI (including your review),Hours per week AFTER,Hours saved per week,Hourly value of this person's time,Value saved per week,Quality or result BEFORE,Quality or result AFTER,Notes
+Lead research,Research one lead before first contact,Sales rep,20,20,6.67,5,1.67,5.00,40,200.00,Research skipped on most leads,Every lead has a sourced note,EXAMPLE ROW: replace with your own numbers
+Follow-up,Find overdue leads and write follow-ups,Owner,5,45,3.75,15,1.25,2.50,100,250.00,About half of quotes followed up,All overdue quotes followed up,EXAMPLE ROW
+Proposals,Write a proposal after a call,Owner,3,180,9.00,40,2.00,7.00,100,700.00,Sent 3 to 4 days after call,Sent same day,EXAMPLE ROW
+Content,Create a week of posts and one newsletter,Marketing assistant,1,300,5.00,60,1.00,4.00,30,120.00,1 to 2 posts per week,3 posts and 1 newsletter per week,EXAMPLE ROW
+Campaign analysis,Review ad results and decide changes,Owner,1,120,2.00,30,0.50,1.50,100,150.00,Reviewed once a quarter,Reviewed weekly with one change,EXAMPLE ROW
+Customer service,Triage and reply to routine messages,Office manager,5,150,12.50,50,4.17,8.33,25,208.33,Replies within 24 hours,Routine replies within 2 hours,EXAMPLE ROW
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+TOTAL (example rows),,,,,38.92,,10.58,28.33,,1628.33,,,Sum of the example rows; recalculate after entering your own data
+HOW TO USE,"1) Log BEFORE times for one normal week, before changing anything. 2) Run the playbooks for two weeks. 3) Log AFTER times including the time you spend reviewing drafts. 4) Hours saved = BEFORE hours minus AFTER hours. 5) Value saved = hours saved x hourly value. 6) Record quality and results too: faster but worse is not a win.",,,,,,,,,,,,

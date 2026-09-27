@@ -1,0 +1,22 @@
+area,action,example,risk_level,autonomy_level,approver,approval_method,value_or_volume_limit,technical_enforcement,evidence_kept,notes
+General,Read and summarise internal files,Summarise last week's ops reports,Low,Runs automatically,None,None,None,allow Read,Output file,
+General,Draft documents,Draft a proposal or SOP,Low,Runs automatically,None,Review before use,None,allow Edit(./drafts/**),Draft in drafts folder,
+Sales,Send email or message to a lead,Follow-up email after a quote,Medium,Needs approval,Sales lead,Approve draft in drafts folder,Max 20 per day,Email send tool set to ask,Draft plus approver name and date,
+Sales,Change a price or offer a discount,Discount on a renewal,High,Needs approval,Owner,Written approval,Any discount over 10 percent,No agent access to pricing tool,Approval note in CRM,
+Marketing,Publish social media post,Post a carousel,Medium,Needs approval,Marketing lead,Approve in scheduling tool,All posts,Publish tools set to ask,Scheduled post record,
+Marketing,Change ad budgets or launch campaigns,Raise daily budget,High,Needs approval,Owner,Written approval,Any change over 50 per day,Ads write tools denied,Change log in ads account,Agent may draft the plan
+Customer service,Reply to a customer complaint,Reply to a late delivery complaint,Medium,Needs approval,Support lead,Approve draft,All complaints,Send tool set to ask,Draft plus approver,
+Customer service,Offer a refund or credit,Partial refund,High,Needs approval,Support lead up to limit then Owner,Approve draft,Support lead up to 50; Owner above 50,Payment tools denied,Refund record with approver,
+Finance,Categorise transactions,Monthly bank CSV,Low,Runs automatically,None,Human reviews medium and low confidence lines,None,allow Read and Edit(./finance/reports/**),Reconciliation file,Never edits the original export
+Finance,Send payment reminder,Day 14 reminder,Medium,Needs approval,Finance lead,Approve draft,Max one reminder per client per week,Send tool set to ask,Draft plus approver,
+Finance,Make or schedule a payment,Pay a supplier invoice,Critical,Never delegated,Owner,Done by a person in the bank,None,No bank access for agents,Bank record,
+Finance,Send legal or formal debt notice,Day 60 formal notice,Critical,Never delegated,Owner and lawyer,Signed by a person,None,No agent send access,Signed letter,
+Operations,Create a purchase order draft,Reorder low stock,Medium,Needs approval,Ops lead,Approve draft,Orders over 1000 go to Owner,Supplier email send set to ask,PO draft plus approver,
+Operations,Change a schedule or booking,Move a technician's job,Medium,Needs approval,Ops lead,Approve in booking tool,All customer-visible changes,Booking write tools set to ask,Booking change log,
+Data,Delete or overwrite records or files,Clean up old CRM contacts,Critical,Never delegated,Owner,Done by a person,None,deny Bash(rm -rf *) and delete tools,Change log,Agent may list candidates only
+Data,Export or share customer data outside the company,Send a customer list to a partner,Critical,Never delegated,Owner,Written approval and data check,None,No external share tools,Record of what was shared and why,Check privacy obligations first
+Website,Publish changes to the live website,Update a landing page,High,Needs approval,Owner or web lead,Review staging then approve,All changes,deny Bash(git push *) plus PreToolUse hook,Commit history,
+People,Anything about hiring firing or discipline,Draft a warning letter,Critical,Never delegated,Owner,Handled by a person,None,Not in any skill,HR file,Agent may help research only
+Your action,,,,,,,,,,
+Your action,,,,,,,,,,
+Your action,,,,,,,,,,

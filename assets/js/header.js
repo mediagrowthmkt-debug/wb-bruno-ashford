@@ -36,12 +36,20 @@
 
     /* --- active nav item -------------------------------------------------- */
     var path = window.location.pathname.replace(/index\.html$/, "").replace(/\/+$/, "/");
-    document.querySelectorAll(".nav-link").forEach(function (a) {
+    // Section = first path segment only, so /courses/.../skills-... never lights "Skills".
+    // Agent pages live under /agents/, their skill pages under /skills/: both light up.
+    var section = "/" + (path.split("/")[1] || "") + "/";
+    document.querySelectorAll(".nav-link, .drawer-link").forEach(function (a) {
+      if (a.hasAttribute("data-home")) {
+        if (section === "//") a.setAttribute("aria-current", "page");
+        return;
+      }
       var href = a.getAttribute("href") || "";
+      if (/^https?:/.test(href)) return;
       var seg = href.replace(/^(\.\.\/)+/, "").split("#")[0].replace(/index\.html$/, "");
       if (!seg) return;
-      var key = "/" + seg.replace(/\/+$/, "");
-      if (key.length > 1 && path.indexOf(key) !== -1) {
+      var key = "/" + seg.replace(/\/+$/, "") + "/";
+      if (key.length > 2 && section === key) {
         a.setAttribute("aria-current", "page");
       }
     });

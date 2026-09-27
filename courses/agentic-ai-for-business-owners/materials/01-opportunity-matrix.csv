@@ -1,0 +1,23 @@
+#,Task (from your Weekly Time Map),Department,Hours per week,Weekly cost (USD),Impact (1-5),Risk if it goes wrong (1-5),Ease (1-5),Opportunity score,Autonomy level (Suggest / Act with approval / Act alone),Right tool (Claude chat / Cowork / Claude Code),Never delegate? (Yes / No),Top 3 pick? (Yes / No),Why
+EX,Compile the weekly sales report,Sales,2.0,300,4,2,4,8.0,Act with approval,Claude Code,No,Yes,Same steps every week; numbers can be checked against the CRM. Example row: delete before you start
+EX,Reply to routine scheduling emails,Operations,1.0,35,2,3,4,2.7,Suggest,Cowork,No,No,Low value per hour and a client-facing tone risk. Example row: delete before you start
+EX,Draft proposals after discovery calls,Sales,3.75,562.5,5,3,3,5.0,Act with approval,Claude Code,No,Yes,High value; owner reviews every proposal before it goes out. Example row: delete before you start
+EX,Decide which late-paying client to drop,Finance,0.5,75,5,5,2,2.0,Suggest,Claude chat,Yes,No,Relationship decision that needs the owner. Agent can prepare the facts only. Example row: delete before you start
+EX,Plan next week's social posts,Marketing,1.5,225,3,2,4,6.0,Act with approval,Claude Code,No,Yes,Repeatable; brand voice can be written down once. Example row: delete before you start
+1,,,,,,,,,,,,,
+2,,,,,,,,,,,,,
+3,,,,,,,,,,,,,
+4,,,,,,,,,,,,,
+5,,,,,,,,,,,,,
+6,,,,,,,,,,,,,
+7,,,,,,,,,,,,,
+8,,,,,,,,,,,,,
+9,,,,,,,,,,,,,
+10,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+SCORING,"Opportunity score = Impact x Ease / Risk. In a spreadsheet: =F2*H2/G2 (adjust the row number).",,,,,,,,,,,,
+IMPACT,"1 = saves minutes of low-value work. 3 = saves a few hours or removes a real bottleneck. 5 = saves many hours of expensive time or speeds up revenue.",,,,,,,,,,,,
+RISK,"1 = a mistake is invisible and easy to fix. 3 = a mistake is internal and caught in review. 5 = a mistake reaches a client, money, legal or reputation.",,,,,,,,,,,,
+EASE,"1 = no clear steps, data scattered or on paper. 3 = steps exist in someone's head, data is digital. 5 = written steps, digital data, same every time.",,,,,,,,,,,,
+NEVER DELEGATE,"Mark Yes for: firing and hiring decisions, final pricing on big deals, legal or medical judgment, anything that needs your personal relationship. The agent may still prepare the facts.",,,,,,,,,,,,
+TOP 3 RULE,"Pick your top 3 by score, but include no more than one task with Risk 4 or 5, and none marked Never delegate.",,,,,,,,,,,,

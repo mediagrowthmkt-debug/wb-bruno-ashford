@@ -1,0 +1,14 @@
+"NOTE: R = Responsible (runs it), A = Accountable (owns the output, exactly ONE per row), C = Contributes (asked for input before changes), I = Informed (told about results or changes). Leave blank if not involved."
+"NOTE: Access levels: Use = has the plugin and needed connectors. Build = can edit the plugin repository. Admin = holds keys to finance or client systems. Approval gate = human sign-off required before the action happens."
+"NOTE: Example rows are illustrative for a team of six. Replace names and skills with your own. Review every quarter and the same day anyone leaves."
+Skill / agent / routine,What it does,Risk level (low/medium/high),Owner (Director),Operations manager,Account manager 1,Account manager 2,Finance officer,Office assistant,Builder,Approval gate required?,Named approver,Connectors or data used,Last reviewed
+acme-ops:weekly-report,Builds weekly client performance report,Medium,I,A,R,R,,,C,Yes (before sending to client),Operations manager,Analytics and CRM read only,
+acme-ops:quote-builder,Drafts quotes from price list and job notes,High,C,A,R,R,C,,C,Yes (before sending),Operations manager,Price list file and CRM,
+acme-ops:invoice-follow-up,Drafts payment reminders for overdue invoices,High,I,C,,,A,R,C,Yes (before sending),Finance officer,Accounting system read only,
+acme-ops:finance-analyst (subagent),Summarizes monthly P&L and cash flow,Medium,I,C,,,A,,C,No (internal only),,Accounting exports,
+acme-ops:meeting-notes,Turns call transcripts into action lists,Low,,A,R,R,,R,C,No,,Meeting transcripts,
+Morning brief routine (scheduled),Daily summary of tasks leads and deadlines,Low,A,R,I,I,,,C,No,,Calendar CRM email read only,
+Lead follow-up routine (scheduled),Drafts follow-ups for leads with no reply in 3 days,High,I,A,R,R,,,C,Yes (before sending),Operations manager,CRM,
+Shared CLAUDE.md,Company knowledge used by every skill,Medium,C,A,C,C,C,I,R,Yes (changes approved),Operations manager,,
+Plugin releases,New versions of acme-ops,Medium,I,A,C,C,C,I,R,Yes (before release),Operations manager,Plugin repository,
+ACCESS LEVEL PER PERSON,,,Admin,Admin + Build,Use,Use,Use + Admin (finance),Use,Build,,,,

@@ -1,0 +1,20 @@
+area,kpi,why_it_matters,formula_or_definition,source_file,update_frequency,target,green_if,amber_if,red_if,owner,include_yes_no,notes
+Sales,Revenue invoiced this week,Shows if the business is selling at the pace needed,Sum of invoices issued in the week,finance/invoices-export.csv,Weekly,35000,>= 35000,28000 to 34999,< 28000,Owner,yes,Example row: replace with your numbers
+Sales,Lead to customer conversion rate,Shows if sales follow-up works,Customers won / qualified leads x 100,crm/crm-export.csv,Weekly,25%,>= 25%,18% to 24%,< 18%,Sales lead,yes,
+Sales,Pipeline value next 30 days,Early warning of a slow month,Sum of open deals expected to close in 30 days,crm/crm-export.csv,Weekly,90000,>= 90000,60000 to 89999,< 60000,Sales lead,yes,
+Sales,Average deal value,Tracks pricing and upsell,Revenue / number of deals won,crm/crm-export.csv,Monthly,4500,>= 4500,3500 to 4499,< 3500,Owner,no,Useful but monthly is enough
+Marketing,Cost per booked appointment,Real cost of getting a customer in front of you,Ad spend / appointments booked,marketing/ads-summary.csv and crm/crm-export.csv,Weekly,60,<= 60,61 to 90,> 90,Marketing lead,yes,Better than cost per lead
+Marketing,Qualified leads this week,Volume of real opportunities,Leads marked qualified in CRM,crm/crm-export.csv,Weekly,40,>= 40,30 to 39,< 30,Marketing lead,yes,
+Marketing,Speed to first reply (hours),Fast replies win more deals,Average hours from lead created to first reply,crm/crm-export.csv,Weekly,1,<= 1,1.1 to 4,> 4,Sales lead,yes,
+Marketing,Instagram followers,Vanity metric unless tied to sales,Total followers,social export,Monthly,n/a,n/a,n/a,n/a,Marketing lead,no,Example of a metric to drop
+Cash,Cash in bank,The number that keeps you in business,Closing balance all accounts,finance/bank/latest.csv,Weekly,60000,>= 60000,30000 to 59999,< 30000,Owner,yes,
+Cash,Weeks of runway,How long you survive if sales stop,Cash in bank / average weekly fixed costs,finance/bank/latest.csv and finance/categories.md,Weekly,12,>= 12,6 to 11,< 6,Owner,yes,
+Cash,Overdue receivables over 30 days,Money earned but not collected,Sum of invoices more than 30 days past due,finance/open-invoices.csv,Weekly,5000,<= 5000,5001 to 15000,> 15000,Finance lead,yes,
+Cash,Gross margin,Shows if work is priced right,(Revenue - direct costs) / revenue x 100,finance/reports/reconciliation.csv,Monthly,45%,>= 45%,35% to 44%,< 35%,Owner,no,Monthly in the report
+Operations,Capacity used,Tells you when to hire or sell harder,Booked hours / available hours x 100,ops/schedule/schedule-export.csv,Weekly,85%,80% to 95%,65% to 79% or > 95%,< 65%,Ops lead,yes,Too high is also a risk
+Operations,On-time delivery rate,Customer experience and reviews,Jobs delivered on or before promised date / total jobs x 100,ops/jobs-export.csv,Weekly,95%,>= 95%,88% to 94%,< 88%,Ops lead,yes,
+Operations,Stock-outs this week,Lost sales and angry customers,Number of SKUs at zero stock,ops/inventory/stock-export.csv,Weekly,0,0,1 to 2,> 2,Ops lead,no,Include if you sell physical products
+Team,Hours saved by agents,Proof the AI department pays off,Sum of hours saved from the routine run log,logs/routine-run-log.csv,Weekly,10,>= 10,5 to 9,< 5,Owner,yes,Feeds Module 12 ROI
+Your KPI,,,,,,,,,,,,
+Your KPI,,,,,,,,,,,,
+Your KPI,,,,,,,,,,,,

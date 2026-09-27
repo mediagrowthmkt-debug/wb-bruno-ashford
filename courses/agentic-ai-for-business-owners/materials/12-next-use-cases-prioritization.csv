@@ -1,0 +1,15 @@
+"NOTE: Score each criterion 1 (worst) to 5 (best). Risk and Effort are reversed: low risk = 5, low effort = 5. Total = Value*2 + Repeatability + Data readiness + Risk + Effort (Value counts double). Max score 30."
+"NOTE: Spreadsheet formula for Total (row 5 onward): =C5*2+D5+E5+F5+G5. Sort by Total, then pick the top three with at most one item scoring 1 or 2 on Risk."
+"NOTE: Example rows are illustrative (a small professional services firm). Replace with your own candidates."
+Use case,Hours per month today,Value (1-5),Repeatability (1-5),Data readiness (1-5),Risk (5 = low),Effort (5 = low),Total,Can reuse existing skill?,Decision,Review date,Notes
+Engagement letter preparation,10,4,5,4,4,5,=C5*2+D5+E5+F5+G5,Yes (proposal skill),Build now,,Template already in shared drive
+Deadline reminders to clients,6,3,5,5,5,4,=C6*2+D6+E6+F6+G6,Yes (follow-up routine),Build now,,Dates live in practice management tool
+Weekly matter status updates,12,5,4,3,4,4,=C7*2+D7+E7+F7+G7,No,Build now,,Needs a clean status field first
+Invoice chasing,5,3,5,4,3,4,=C8*2+D8+E8+F8+G8,Yes (follow-up routine),Next quarter,,Human approval gate required before sending
+Contract first drafts,20,5,2,2,1,1,=C9*2+D9+E9+F9+G9,No,Pilot later,,High risk; supervised pilot only
+New client intake summary,4,2,5,4,4,5,=C10*2+D10+E10+F10+G10,Yes (meeting notes skill),Next quarter,,
+Social media posts,6,2,3,3,4,4,=C11*2+D11+E11+F11+G11,No,Backlog,,Low value for this business
+Monthly partner dashboard,4,3,5,3,5,3,=C12*2+D12+E12+F12+G12,Yes (weekly report routine),Next quarter,,
+Recruitment screening notes,3,2,3,3,2,3,=C13*2+D13+E13+F13+G13,No,Backlog,,Personal data; check AI use policy first
+Supplier invoice coding,8,3,5,4,4,3,=C14*2+D14+E14+F14+G14,No,Next quarter,,
+"DECISION NOTE (write below): The three chosen use cases, why they won, expected hours saved per month, owner, and the date you will review results."

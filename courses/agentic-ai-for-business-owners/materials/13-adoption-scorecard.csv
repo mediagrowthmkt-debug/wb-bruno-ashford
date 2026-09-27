@@ -1,0 +1,13 @@
+"NOTE: Fill one row per person per week (two-minute Friday form). Adoption rate = people with 3 or more skill runs this week / people in rollout. Team targets by day 30: 80 percent adoption, average confidence 3.5 or higher, rework under 15 percent."
+"NOTE: Formulas if you use a spreadsheet: Status column = IF(H<3,""Needs pairing"",IF(E<3,""Check fit"",""On track"")) where E = skill runs and H = confidence. Hours saved uses the Module 12 method. Example rows are illustrative."
+"NOTE: Use this to help people, never to shame them. Low usage usually means the skills do not fit the work yet."
+Week,Person,Role,Wave,Skill runs this week,Tasks completed with AI,Est. hours saved,Confidence (1-5),Outputs sampled,Outputs needing major rework,Rework %,Top friction point,Support action,Status
+1,Sarah,Account manager,Pilot,6,5,2.5,3,5,1,20,Not sure which skill to use for monthly reports,Show skill list in /plugin,On track
+1,Daniel,Operations manager,Pilot,8,7,3,4,5,0,0,None,Become champion for wave 2,On track
+1,Priya,Office assistant,Pilot,2,2,0.5,2,2,1,50,Worried about sending wrong info to clients,Pair with Daniel twice,Needs pairing
+2,Sarah,Account manager,Pilot,9,8,4,4,5,0,0,Report skill misses new client,Builder adds client to CLAUDE.md,On track
+2,Daniel,Operations manager,Pilot,10,9,4.5,4,5,0,0,None,,On track
+2,Priya,Office assistant,Pilot,4,4,1.5,3,4,0,0,Supplier emails not covered,Builder drafts supplier-chase skill,On track
+2,Tom,Finance officer,Department,1,1,0.3,4,1,0,0,Invoice skill does not handle part payments,Fix skill,Check fit
+2,Leah,Account manager,Department,5,4,2,3,4,1,25,Output too long,Shorten format in skill,On track
+TEAM SUMMARY WEEK 2,5 people,,,29,26,12.3,3.6,19,1,5,Skill gaps for finance and supplier work,Ship plugin v1.1,Adoption 80 percent (4 of 5)

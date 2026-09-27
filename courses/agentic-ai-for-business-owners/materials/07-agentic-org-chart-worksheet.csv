@@ -1,0 +1,16 @@
+Department,Recurring task,Frequency,Hours per week today,Who does it today,New model (Human only / Agent drafts + human approves / Agent alone),Agent name (subagent file),Human owner,Allowed tools,Forbidden actions,Approval step,Success measure,Status (Idea / Built / Testing / Live),Notes
+Sales,Research new leads before first contact,Daily,4,Sales rep,Agent alone,sdr-researcher,Sales lead,"Read, Grep, Glob, Write, WebSearch, WebFetch","Send messages, access logged-in sites",None (internal research),Research note for every lead with sources; 20 leads per week,Live,EXAMPLE ROW: replace with your own
+Sales,Write first outreach emails,Daily,3,Sales rep,Agent drafts + human approves,copywriter,Sales lead,"Read, Grep, Glob, Write","Send, schedule, publish",Reviewer pass then sales rep sends,Reply rate above 8 percent,Testing,EXAMPLE ROW
+Sales,Follow up leads with no reply after 5 days,Daily,2,Sales rep,Agent drafts + human approves,copywriter,Sales lead,"Read, Grep, Glob, Write, CRM read tools","Send, change deal stage",Sales rep reviews and sends,Zero leads without follow-up after 7 days,Built,EXAMPLE ROW
+Sales,Negotiate price and close deals,Weekly,5,Owner,Human only,,Owner,,,,,Live,Relationship work stays human
+Marketing,Draft weekly social posts and newsletter,Weekly,4,Marketing assistant,Agent drafts + human approves,copywriter,Marketing manager,"Read, Grep, Glob, Write","Publish, schedule",Reviewer pass then marketing manager publishes,4 posts and 1 newsletter per week on time,Live,EXAMPLE ROW
+Finance,Weekly sales and margin report,Weekly,3,Owner,Agent alone,data-analyst,Owner,"Read, Grep, Glob, Write","Edit source data, send externally",None (internal report),Report ready every Monday 9am,Live,EXAMPLE ROW
+Operations,Check proposals and client documents before sending,Per document,2,Owner,Agent alone,reviewer,Operations manager,"Read, Grep, Glob","Edit, write, send",Blockers stop the document,Zero client-facing errors per month,Live,EXAMPLE ROW: reviewer is always read-only
+Customer service,Answer routine customer questions,Daily,6,Office manager,Agent drafts + human approves,,Office manager,,,,,Idea,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,,,,

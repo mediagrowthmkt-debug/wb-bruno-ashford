@@ -1,0 +1,24 @@
+#,Task,Department,How often,Times per week,Minutes each time,Hours per week,Who does it today,Their hourly cost (USD),Weekly cost (USD),Energy (Drains / Neutral / Energizes),Needs my judgment? (Yes / Partly / No),Tools or files involved,Notes
+EX,Compile the weekly sales report from the CRM and spreadsheet,Sales,Weekly,1,120,2.0,Owner,150,300,Drains,Partly,CRM export + Google Sheets,Example row: delete before you start
+EX,Reply to routine client emails (status updates and scheduling),Operations,Daily,10,6,1.0,Office manager,35,35,Neutral,No,Gmail + calendar,Example row: delete before you start
+EX,Write and send proposals after discovery calls,Sales,Per lead,3,75,3.75,Owner,150,562.5,Drains,Partly,Word template + past proposals,Example row: delete before you start
+EX,Chase unpaid invoices,Finance,Weekly,1,60,1.0,Bookkeeper,40,40,Drains,No,QuickBooks + email,Example row: delete before you start
+EX,Plan next week's social posts,Marketing,Weekly,1,90,1.5,Owner,150,225,Neutral,Partly,Canva + Instagram,Example row: delete before you start
+1,,,,,,,,,,,,,
+2,,,,,,,,,,,,,
+3,,,,,,,,,,,,,
+4,,,,,,,,,,,,,
+5,,,,,,,,,,,,,
+6,,,,,,,,,,,,,
+7,,,,,,,,,,,,,
+8,,,,,,,,,,,,,
+9,,,,,,,,,,,,,
+10,,,,,,,,,,,,,
+11,,,,,,,,,,,,,
+12,,,,,,,,,,,,,
+13,,,,,,,,,,,,,
+14,,,,,,,,,,,,,
+15,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+HOW TO USE,"1) Keep this open for 5 working days. 2) Every time you switch task, log it. 3) Hours per week = Times per week x Minutes each time / 60. 4) Weekly cost = Hours per week x Their hourly cost. 5) On Friday, sort by Hours per week and circle your top 10 repetitive tasks. 6) Your hourly cost as owner = what you would pay to replace yourself, or your target annual income divided by 2000.",,,,,,,,,,,,
+DEPARTMENTS,"Use: Sales, Marketing, Customer Service, Operations, Finance, Admin, HR, Reporting",,,,,,,,,,,,

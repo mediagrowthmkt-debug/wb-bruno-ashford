@@ -21,7 +21,7 @@
   // Optional phone (US/UK). If provided, require 7-15 digits (after stripping
   // +, spaces, dashes and parentheses). Empty is allowed (low friction).
   var PHONE_RE = /^[0-9]{7,15}$/;
-  var TOTAL = 5; // input steps: name, email, phone, interest, detail
+  var TOTAL = 4; // steps: interest (cards), name, email, detail
 
   function ready(fn) {
     if (document.readyState !== "loading") fn();
@@ -51,6 +51,17 @@
     var sourceEl = form.querySelector('input[name="source"]');
     var interestHidden = form.querySelector('input[name="interest"]');
 
+    var choices = Array.prototype.slice.call(form.querySelectorAll(".lm-choice"));
+    choices.forEach(function (c) {
+      c.addEventListener("click", function () {
+        choices.forEach(function (x) { x.classList.toggle("is-on", x === c); });
+        var val = c.getAttribute("data-val");
+        if (interestSel) interestSel.value = val;
+        if (interestHidden) interestHidden.value = val;
+        window.setTimeout(function () { if (current === 0) goNext(); }, 220);
+      });
+    });
+
     var backBtn = form.querySelector("[data-lm-back]");
     var nextBtn = form.querySelector("[data-lm-next]");
     var submitBtn = form.querySelector("[data-lm-submit]");
@@ -69,7 +80,7 @@
 
     function stepField(i) {
       var s = steps[i];
-      return s ? s.querySelector("input, select, textarea") : null;
+      return s ? s.querySelector(".lm-choice.is-on, .lm-choice, input, textarea") : null;
     }
 
     function render(animateDir) {
@@ -101,31 +112,25 @@
     // per-step validation. Returns true if the current step may advance/submit.
     function validateStep(i) {
       if (i === 0) {
+        if (!interestSel || !interestSel.value || !form.querySelector(".lm-choice.is-on")) {
+          setNote("Pick the option closest to what you need.", "error");
+          return false;
+        }
+      } else if (i === 1) {
         if (!nameEl || !nameEl.value.trim()) {
           setNote("Please enter your first name.", "error");
           if (nameEl) nameEl.focus();
           return false;
         }
-      } else if (i === 1) {
+      } else if (i === 2) {
         var v = (emailEl && emailEl.value ? emailEl.value : "").trim();
         if (!EMAIL_RE.test(v)) {
           setNote("Please enter a valid work email.", "error");
           if (emailEl) emailEl.focus();
           return false;
         }
-      } else if (i === 2) {
-        // phone is optional; only validate when something was typed
-        var pv = (phoneEl && phoneEl.value ? phoneEl.value : "").trim();
-        if (pv) {
-          var digits = pv.replace(/[\s()+\-.]/g, "");
-          if (!PHONE_RE.test(digits)) {
-            setNote("Please enter a valid phone number, or leave it blank.", "error");
-            if (phoneEl) phoneEl.focus();
-            return false;
-          }
-        }
       }
-      // step 3 (select) always has a value; step 4 is optional
+      // step 3 (detail) is optional
       return true;
     }
 
@@ -151,6 +156,8 @@
 
       // context from the trigger
       var interest = trigger ? trigger.getAttribute("data-interest") : "";
+      var ALIAS = { implement: "departments", personal: "mentorship", skills: "custom" };
+      if (interest && ALIAS[interest]) interest = ALIAS[interest];
       var source = (trigger && trigger.getAttribute("data-source")) || "Popup: Lead modal";
       if (interestSel && interest) {
         for (var i = 0; i < interestSel.options.length; i++) {
@@ -159,6 +166,7 @@
       }
       if (sourceEl) sourceEl.value = source;
       if (interestHidden) interestHidden.value = interest || (interestSel ? interestSel.value : "");
+      choices.forEach(function (c) { c.classList.toggle("is-on", !!interest && c.getAttribute("data-val") === interest); });
 
       modal.hidden = false;
       window.requestAnimationFrame(function () { modal.classList.add("is-open"); });

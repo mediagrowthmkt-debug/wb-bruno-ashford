@@ -1,0 +1,16 @@
+"NOTE: Part 1 lists shared costs. Part 2 allocates them to each agent. Supervision cost = weekly minutes / 60 * loaded hourly cost * 4.33 weeks per month."
+"NOTE: Loaded hourly cost = (annual salary + taxes + benefits) / annual working hours. For the owner, use what you would pay someone to replace you on that task."
+"NOTE: Only allocate tools that exist because of the agent. A CRM you would pay for anyway is not an agent cost. Example rows are illustrative."
+PART 1 SHARED COSTS,Monthly cost (USD),Billing type,Where to check,Notes
+Claude plan (Pro / Max / Team seat),100,Subscription,Claude account settings and usage screen,Split across agents by share of use
+Anthropic API usage for scheduled routines,75,Usage based,Anthropic Console usage and cost by API key,Give each routine its own key for clean data
+Automation or connector platform,40,Subscription,Vendor billing page,Only if bought for the agents
+Data or enrichment tool,0,Subscription,Vendor billing page,
+PART 2 PER AGENT,Share of Claude plan %,Share of Claude plan (USD),API usage (USD),Dedicated tools (USD),Weekly supervision minutes,Loaded hourly cost (USD),Supervision cost per month (USD),Total monthly cost (USD),One-off build hours,One-off build cost (USD),Notes
+Weekly client report routine,30,30,15,10,20,45,65,120,12,540,Supervision = review before sending
+Quote preparation skill,30,30,20,10,35,38,96,156,20,760,Estimator reviews every quote
+Lead follow-up routine,20,20,25,10,15,40,43,98,10,400,Approval gate before any message is sent
+Social caption generator,10,10,10,10,70,30,152,182,8,240,High rework drives supervision
+Month-end checklist runner,10,10,5,0,10,55,40,55,6,330,
+TOTAL,100,100,75,40,150,,396,611,56,2270,Check that plan shares add up to 100%
+"HOW TO FILL: Share of Claude plan (USD) = plan cost * share % / 100. Supervision cost = minutes / 60 * hourly cost * 4.33. Total monthly cost = plan share + API usage + dedicated tools + supervision. Build cost = build hours * your hourly value."

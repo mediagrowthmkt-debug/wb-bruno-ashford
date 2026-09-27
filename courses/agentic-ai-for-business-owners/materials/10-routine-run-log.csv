@@ -1,0 +1,11 @@
+date,time,routine,scheduler,status,runtime_minutes,minutes_saved,output_file,estimated_cost_usd,issues_found,action_taken
+2026-09-28,06:45,morning-brief,launchd,success,2,35,briefs/brief-2026-09-28.md,0.18,none,none
+2026-09-29,06:45,morning-brief,launchd,success,2,40,briefs/brief-2026-09-29.md,0.21,Flagged overdue invoice for Hartley Roofing (4200),Called client and got a payment date
+2026-09-30,06:45,morning-brief,launchd,failed,0,0,,0.00,Mac was logged out overnight,Set Mac to stay logged in and reran by hand
+2026-10-01,06:45,morning-brief,launchd,success,3,30,briefs/brief-2026-10-01.md,0.24,Calendar section empty (connector not allowed),Added read-only calendar tool to allowlist
+2026-10-02,06:45,morning-brief,launchd,success,2,45,briefs/brief-2026-10-02.md,0.20,none,Removed the social media section (never used)
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
