@@ -91,8 +91,11 @@
         function (entries) {
           entries.forEach(function (entry) {
             if (entry.isIntersecting) {
-              start();
               io.disconnect();
+              // measure/draw off the critical path (avoids a forced reflow during load)
+              var go = function () { window.requestAnimationFrame(start); };
+              if ("requestIdleCallback" in window) window.requestIdleCallback(go, { timeout: 1200 });
+              else window.setTimeout(go, 300);
             }
           });
         },
